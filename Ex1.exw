@@ -8,16 +8,18 @@ atom width = 800, height = 600
 InitWindow(width,height,"Basic Win")
 
 	SetTargetFPS(30)
+	
+atom b = bytes_to_int({0,0,0,0})
 
 while not WindowShouldClose()  do
 	
 	BeginDrawing()
 	
-	ClearBackground(0)
+	ClearBackground(b)
 	
 	EndDrawing()
 
 end while
 
 CloseWindow()
-­8.23
+­24.13
