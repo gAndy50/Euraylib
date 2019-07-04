@@ -1,0 +1,3047 @@
+------------------------------------
+--Euraylib                        --
+--Written by Andy P. (Icy_Viking) --
+--Raylib version 2.5              --
+--Euphoria version 4.1.0 beta 2   --
+--Icy Viking Games                --
+--Euphoria wrapper for Raylib     --
+------------------------------------
+without warning
+
+include std/dll.e
+--include std/convert.e
+include std/machine.e
+include std/os.e
+
+atom ray
+
+ifdef WINDOWS then
+	ray = open_dll("raylib.dll")
+	if ray = -1 then
+		puts(1,"Failed to open raylib.dll!\n")
+		abort(0)
+	end if
+	elsifdef LINUX or FREEBSD then
+	ray = open_dll("raylib.so")
+	if ray = -1 then
+		puts(1,"Failed to open raylib!\n")
+		abort(0)
+	end if
+end ifdef
+
+include flags.e
+
+--Core Module Functions
+--Window Functions
+
+public constant xInitWindow = define_c_proc(ray,"+InitWindow",{C_INT,C_INT,C_POINTER}),
+				xWindowShouldClose = define_c_func(ray,"+WindowShouldClose",{},C_BOOL),
+				xCloseWindow = define_c_proc(ray,"+CloseWindow",{}),
+				xIsWindowReady = define_c_func(ray,"+IsWindowReady",{},C_BOOL),
+				xIsWindowMinimized = define_c_func(ray,"+IsWindowMinimized",{},C_BOOL),
+				xIsWindowResized = define_c_func(ray,"+IsWindowResized",{},C_BOOL),
+				xIsWindowHidden = define_c_func(ray,"+IsWindowHidden",{},C_BOOL),
+				xToggleFullscreen = define_c_proc(ray,"+ToggleFullscreen",{}),
+				xUnhideWindow = define_c_proc(ray,"+UnhideWindow",{}),
+				xHideWindow = define_c_proc(ray,"+HideWindow",{}),
+				xSetWindowIcon = define_c_proc(ray,"+SetWindowIcon",{C_POINTER}),
+				xSetWindowTitle = define_c_proc(ray,"+SetWindowTitle",{C_POINTER}),
+				xSetWindowPosition = define_c_proc(ray,"+SetWindowPosition",{C_INT,C_INT}),
+				xSetWindowMonitor = define_c_proc(ray,"+SetWindowMonitor",{C_INT}),
+				xSetWindowMinSize = define_c_proc(ray,"+SetWindowMinSize",{C_INT,C_INT}),
+				xSetWindowSize = define_c_proc(ray,"+SetWindowSize",{C_INT,C_INT}),
+				xGetWindowHandle = define_c_func(ray,"+GetWindowHandle",{},C_POINTER),
+				xGetScreenWidth = define_c_func(ray,"+GetScreenWidth",{},C_INT),
+				xGetScreenHeight = define_c_func(ray,"+GetScreenHeight",{},C_INT),
+				xGetMonitorCount = define_c_func(ray,"+GetMonitorCount",{},C_INT),
+				xGetMonitorWidth = define_c_func(ray,"+GetMonitorWidth",{C_INT},C_INT),
+				xGetMonitorHeight = define_c_func(ray,"+GetMonitorHeight",{C_INT},C_INT),
+				xGetMonitorPhysicalWidth = define_c_func(ray,"+GetMonitorPhysicalWidth",{C_INT},C_INT),
+				xGetMonitorPhysicalHeight = define_c_func(ray,"+GetMonitorPhysicalHEight",{C_INT},C_INT),
+				xGetMonitorName = define_c_func(ray,"+GetMonitorName",{C_INT},C_POINTER),
+				xGetClipboardText = define_c_func(ray,"+GetClipboardText",{},C_POINTER),
+				xSetClipboardText = define_c_proc(ray,"+SetClipboardText",{C_POINTER})
+				
+public procedure InitWindow(atom w,atom h,sequence title)
+
+ atom str = allocate_string(title,1)
+ c_proc(xInitWindow,{w,h,str})
+	
+end procedure
+
+public function WindowShouldClose()
+
+ return c_func(xWindowShouldClose,{})
+	
+end function
+
+public procedure CloseWindow()
+
+ c_proc(xCloseWindow,{})
+	
+end procedure
+
+public function IsWindowReady()
+
+ return c_func(xIsWindowReady,{})
+	
+end function
+
+public function IsWindowMinimized()
+
+ return c_func(xIsWindowMinimized,{})
+	
+end function
+
+public function IsWindowResized()
+
+ return c_func(xIsWindowResized,{})
+	
+end function
+
+public function IsWindowHidden()
+
+ return c_func(xIsWindowHidden,{})
+	
+end function
+
+public procedure ToggleFullscreen()
+
+ c_proc(xToggleFullscreen,{})
+	
+end procedure
+
+public procedure UnhideWindow()
+
+ c_proc(xUnhideWindow,{})
+	
+end procedure
+
+public procedure HideWindow()
+
+ c_proc(xHideWindow,{})
+	
+end procedure
+
+public procedure SetWindowIcon(atom img)
+
+ c_proc(xSetWindowIcon,{img})
+	
+end procedure
+
+public procedure SetWindowTitle(sequence title)
+
+ atom str = allocate_string(title,1)
+ c_proc(xSetWindowTitle,{str})
+	
+end procedure
+
+public procedure SetWindowPosition(atom x,atom y)
+
+ c_proc(xSetWindowPosition,{x,y})
+	
+end procedure
+
+public procedure SetWindowMonitor(atom mon)
+
+ c_proc(xSetWindowMonitor,{mon})
+	
+end procedure
+
+public procedure SetWindowMinSize(atom width,atom height)
+
+ c_proc(xSetWindowMinSize,{width,height})
+	
+end procedure
+
+public procedure SetWindowSize(atom w,atom h)
+
+ c_proc(xSetWindowSize,{w,h})
+	
+end procedure
+
+public function GetWindowHandle()
+
+ return c_func(xGetWindowHandle,{})
+	
+end function
+
+public function GetScreenWidth()
+
+ return c_func(xGetScreenWidth,{})
+	
+end function
+
+public function GetScreenHeight()
+
+ return c_func(xGetScreenHeight,{})
+	
+end function
+
+public function GetMonitorCount()
+
+ return c_func(xGetMonitorCount,{})
+	
+end function
+
+public function GetMonitorWidth(atom mon)
+
+ return c_func(xGetMonitorWidth,{mon})
+	
+end function
+
+public function GetMonitorHeight(atom mon)
+
+ return c_func(xGetMonitorHeight,{mon})
+	
+end function
+
+public function GetMonitorPhysicalWidth(atom mon)
+
+ return c_func(xGetMonitorPhysicalWidth,{mon})
+	
+end function
+
+public function GetMonitorPhysicalHeight(atom mon)
+
+ return c_func(xGetMonitorPhysicalHeight,{mon})
+	
+end function
+
+public function GetMonitorName(atom mon)
+
+ return c_func(xGetMonitorName,{mon})
+	
+end function
+
+public function GetClipboardText()
+
+ return c_func(xGetClipboardText,{})
+	
+end function
+
+public procedure SetClipboardText(sequence text)
+
+ atom str = allocate_string(text,1)
+ c_proc(xSetClipboardText,{str})
+	
+end procedure
+
+--Cursor Functions
+
+public constant xShowCursor = define_c_proc(ray,"+ShowCursor",{}),
+				xHideCursor = define_c_proc(ray,"+HideCursor",{}),
+				xIsCursorHidden = define_c_func(ray,"+IsCursorHidden",{},C_BOOL),
+				xEnableCursor = define_c_proc(ray,"+EnableCursor",{}),
+				xDisableCursor = define_c_proc(ray,"+DisableCursor",{})
+				
+public procedure ShowCursor()
+
+ c_proc(xShowCursor,{})
+	
+end procedure
+
+public procedure HideCursor()
+
+ c_proc(xHideCursor,{})
+	
+end procedure
+
+public function IsCursorHidden()
+
+ return c_func(xIsCursorHidden,{})
+	
+end function
+
+public procedure EnableCursor()
+
+ c_proc(xEnableCursor,{})
+	
+end procedure
+
+public procedure DisableCursor()
+
+ c_proc(xDisableCursor,{})
+	
+end procedure
+
+--Drawing Functions
+
+public constant xClearBackground = define_c_proc(ray,"+ClearBackground",{C_UINT}),
+				xBeginDrawing = define_c_proc(ray,"+BeginDrawing",{}),
+				xEndDrawing = define_c_proc(ray,"+EndDrawing",{}),
+				xBeginMode2D = define_c_proc(ray,"+BeginMode2D",{C_POINTER}),
+				xEndMode2D = define_c_proc(ray,"+EndMode2D",{}),
+				xBeginMode3D = define_c_proc(ray,"+BeginMode3D",{C_POINTER}),
+				xEndMode3D = define_c_proc(ray,"+EndMode3D",{}),
+				xBeginTextureMode = define_c_proc(ray,"+BeginTextureMode",{C_POINTER}),
+				xEndTextureMode = define_c_proc(ray,"+EndTextureMode",{})
+				
+public procedure ClearBackground(atom col)
+
+ c_proc(xClearBackground,{col})
+	
+end procedure
+
+public procedure BeginDrawing()
+
+ c_proc(xBeginDrawing,{})
+	
+end procedure
+
+public procedure EndDrawing()
+
+ c_proc(xEndDrawing,{})
+	
+end procedure
+
+public procedure BeginMode2D(atom cam)
+
+ c_proc(xBeginMode2D,{cam})
+	
+end procedure
+
+public procedure BeginMode3D(atom cam)
+
+ c_proc(xBeginMode3D,{cam})
+	
+end procedure
+
+public procedure Endmode3D()
+
+ c_proc(xEndMode3D,{})
+	
+end procedure
+
+public procedure BeginTextureMode(atom tar)
+
+ c_proc(xBeginTextureMode,{tar})
+	
+end procedure
+
+public procedure EndTextureMode()
+
+ c_proc(xEndTextureMode,{})
+	
+end procedure
+
+--Screen-space Functions
+
+public constant xGetMouseRay = define_c_func(ray,"+GetMouseRay",{C_FLOAT,C_FLOAT,C_POINTER},C_POINTER),
+				xGetWorldToScreen = define_c_func(ray,"+GetWorldToScreen",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT),
+				xGetCameraMatrix = define_c_func(ray,"+GetCameraMatrix",{C_POINTER},C_POINTER)
+				
+public function GetMouseRay(atom x,atom y,atom cam)
+
+ return c_func(xGetMouseRay,{x,y,cam})
+	
+end function
+
+public function GetWorldToScreen(atom x,atom y,atom z,atom cam)
+
+ return c_func(xGetWorldToScreen,{x,y,z,cam})
+	
+end function
+
+public function GetCameraMatrix(atom cam)
+
+ return c_func(xGetCameraMatrix,{cam})
+	
+end function
+
+--Time Functions
+
+public constant xSetTargetFPS = define_c_proc(ray,"+SetTargetFPS",{C_INT}),
+				xGetFPS = define_c_func(ray,"+GetFPS",{},C_INT),
+				xGetFrameTime = define_c_func(ray,"+GetFrameTime",{},C_FLOAT),
+				xGetTime = define_c_func(ray,"+GetTime",{},C_DOUBLE)
+				
+public procedure SetTargetFPS(atom fps)
+
+ c_proc(xSetTargetFPS,{fps})
+	
+end procedure
+
+public function GetFPS()
+
+ return c_func(xGetFPS,{})
+	
+end function
+
+public function GetFrameTime()
+
+ return c_func(xGetFrameTime,{})
+	
+end function
+
+public function GetTime()
+
+ return c_func(xGetTime,{})
+	
+end function
+
+--Color Functions
+
+public constant xColorToInt = define_c_func(ray,"+ColorToInt",{C_UINT},C_INT),
+				xColorNormalize = define_c_func(ray,"+ColorNormalize",{C_UINT},C_FLOAT),
+				xColorToHSV = define_c_func(ray,"+ColorToHSV",{C_UINT},C_FLOAT),
+				xColorFromHSV = define_c_func(ray,"+ColorFromHSV",{C_FLOAT},C_POINTER),
+				xGetColor = define_c_func(ray,"+GetColor",{C_INT},C_POINTER),
+				xFade = define_c_func(ray,"+Fade",{C_UINT,C_FLOAT},C_POINTER)
+				
+public function ColorToInt(atom col)
+
+ return c_func(xColorToInt,{col})
+	
+end function
+
+public function ColorNormalize(atom col)
+
+ return c_func(xColorNormalize,{col})
+	
+end function
+
+public function ColorToHSV(atom col)
+
+ return c_func(xColorToHSV,{col})
+	
+end function
+
+public function ColorFromHSV(atom hsv)
+
+ return c_func(xColorFromHSV,{hsv})
+	
+end function
+
+public function GetColor(atom val)
+
+ return c_func(xGetColor,{val})
+	
+end function
+
+public function Fade(atom col,atom alpha)
+
+ return c_func(xFade,{col,alpha})
+	
+end function
+
+--Misc Functions
+
+public constant xSetConfigFlags = define_c_proc(ray,"+SetConfigFlags",{C_UINT}),
+				xSetTraceLogLevel = define_c_proc(ray,"+SetTraceLogLevel",{C_INT}),
+				xSetTraceLogExit = define_c_proc(ray,"+SetTraceLogExit",{C_INT}),
+				xSetTraceLogCallback = define_c_proc(ray,"+SetTraceLogCallback",{C_POINTER}),
+				xTraceLog = define_c_proc(ray,"+TraceLog",{C_INT,C_POINTER}),
+				xTakeScreenshot = define_c_proc(ray,"+TakeScreenshot",{C_POINTER}),
+				xGetRandomValue = define_c_func(ray,"+GetRandomValue",{C_INT,C_INT},C_INT)
+				
+public procedure SetConfigFlags(sequence flags)
+
+ c_proc(xSetConfigFlags,{flags})
+	
+end procedure
+
+public procedure SetTraceLogLevel(atom xlog)
+
+ c_proc(xSetTraceLogLevel,{xlog})
+	
+end procedure
+
+public procedure SetTraceLogExit(atom xlog)
+
+ c_proc(xSetTraceLogExit,{xlog})
+	
+end procedure
+
+public procedure SetTraceLogCallback(atom cb)
+
+ c_proc(xSetTraceLogCallback,{cb})
+	
+end procedure
+
+public procedure TraceLog(atom xlog,sequence text)
+
+ atom str = allocate_string(text,1)
+ c_proc(xTraceLog,{xlog,str})
+	
+end procedure
+
+public procedure TakeScreenshot(sequence file)
+
+ atom str = allocate_string(file,1)
+ c_proc(xTakeScreenshot,{str})
+	
+end procedure
+
+public function GetRandomValue(atom min,atom max)
+
+ return c_func(xGetRandomValue,{min,max})
+	
+end function
+
+--File Management Functions
+
+public constant xFileExists = define_c_func(ray,"+FileExists",{C_POINTER},C_BOOL),
+				xIsFileExtension = define_c_func(ray,"+IsFileExtension",{C_POINTER,C_POINTER},C_BOOL),
+				xGetExtension = define_c_func(ray,"+GetExtension",{C_POINTER},C_POINTER),
+				xGetFileName = define_c_func(ray,"+GetFileName",{C_POINTER},C_POINTER),
+				xGetFileNameWithoutExt = define_c_func(ray,"+GetFileNameWithoutExt",{C_POINTER},C_POINTER),
+				xGetDirectoryPath = define_c_func(ray,"+GetDirectoryPath",{C_POINTER},C_POINTER),
+				xGetWorkingDirectory = define_c_func(ray,"+GetWorkingDirectory",{},C_POINTER),
+				xGetDirectoryFiles = define_c_func(ray,"+GetDirectoryFiles",{C_POINTER,C_POINTER},C_POINTER),
+				xClearDirectoryFiles = define_c_proc(ray,"+ClearDirectoryFiles",{}),
+				xChangeDirectory = define_c_func(ray,"+ChangeDirectory",{C_POINTER},C_BOOL),
+				xIsFileDropped = define_c_func(ray,"+IsFileDropped",{},C_BOOL),
+				xGetDroppedFiles = define_c_func(ray,"+GetDroppedFiles",{C_POINTER},C_POINTER),
+				xClearDroppedFiles = define_c_proc(ray,"+ClearDroppedFiles",{}),
+				xGetFileModTime = define_c_func(ray,"+GetFileModTime",{C_POINTER},C_LONG)
+				
+public function FileExists(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xFileExists,{str})
+	
+end function
+
+public function IsFileExtension(sequence file,sequence ext)
+
+ atom str = allocate_string(file,1)
+ atom ex = allocate_string(ext,1)
+ 
+ return c_func(xIsFileExtension,{str,ex})
+	
+end function
+
+public function GetExtension(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xGetExtension,{str})
+	
+end function
+
+public function GetFileName(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xGetFileName,{str})
+	
+end function
+
+public function GetFileNameWithoutExt(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xGetFileNameWithoutExt,{str})
+	
+end function
+
+public function GetDirectoryPath(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xGetDirectoryPath,{str})
+	
+end function
+
+public function GetWorkingDirectory()
+
+ return c_func(xGetWorkingDirectory,{})
+	
+end function
+
+public function GetDirectoryFiles(sequence path,atom count)
+
+ atom str = allocate_string(path,1)
+ 
+ return c_func(xGetDirectoryFiles,{str,count})
+	
+end function
+
+public procedure ClearDirectoryFiles()
+
+ c_proc(xClearDirectoryFiles,{})
+	
+end procedure
+
+public function ChangeDirectory(sequence xdir)
+
+ atom str = allocate_string(xdir,1)
+ 
+ return c_func(xChangeDirectory,{str})
+	
+end function
+
+public function IsFileDropped()
+
+ return c_func(xIsFileDropped,{})
+	
+end function
+
+public function GetDroppedFiles(atom count)
+
+ return c_func(xGetDroppedFiles,{count})
+	
+end function
+
+public procedure ClearDroppedFiles()
+
+ c_proc(xClearDroppedFiles,{})
+	
+end procedure
+
+public function GetFileModTime(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xGetFileModTime,{str})
+	
+end function
+
+--Storage Management Functions
+
+public constant xStorageSaveValue = define_c_proc(ray,"+StorageSaveValue",{C_INT,C_INT}),
+				xStorageLoadValue = define_c_func(ray,"+StorageLoadValue",{C_INT},C_INT),
+				xOpenURL = define_c_proc(ray,"+OpenURL",{C_POINTER})
+				
+public procedure StorageSaveValue(atom pos,atom val)
+
+ c_proc(xStorageSaveValue,{pos,val})
+	
+end procedure
+
+public function StorageLoadValue(atom pos)
+
+ return c_func(xStorageLoadValue,{pos})
+	
+end function
+
+public procedure OpenURL(sequence url)
+
+ atom str = allocate_string(url,1)
+ 
+ c_proc(xOpenURL,{str})
+	
+end procedure
+
+--Input Functions (Keyboard)
+
+public constant xIsKeyPressed = define_c_func(ray,"+IsKeyPressed",{C_INT},C_BOOL),
+				xIsKeyDown = define_c_func(ray,"+IsKeyDown",{C_INT},C_BOOL),
+				xIsKeyReleased = define_c_func(ray,"+IsKeyReleased",{C_INT},C_BOOL),
+				xIsKeyUp = define_c_func(ray,"+IsKeyUp",{C_INT},C_BOOL),
+				xGetKeyPressed = define_c_func(ray,"+GetKeyPressed",{},C_INT),
+				xSetExitKey = define_c_proc(ray,"+SetExitKey",{C_INT})
+				
+public function IsKeyPressed(atom key)
+
+ return c_func(xIsKeyPressed,{key})
+	
+end function
+
+public function IsKeyDown(atom key)
+
+ return c_func(xIsKeyDown,{key})
+	
+end function
+
+public function IsKeyReleased(atom key)
+
+ return c_func(xIsKeyReleased,{key})
+	
+end function
+
+public function IsKeyUp(atom key)
+
+ return c_func(xIsKeyUp,{key})
+	
+end function
+
+public function GetKeyPressed()
+
+ return c_func(xGetKeyPressed,{})
+	
+end function
+
+public procedure SetExitKey(atom key)
+
+ c_proc(xSetExitKey,{key})
+	
+end procedure
+
+--Input Functions (Gamepad)
+
+public constant xIsGamepadAvailable = define_c_func(ray,"+IsGamepadAvailable",{C_INT},C_BOOL),
+				xIsGamepadName = define_c_func(ray,"+IsGamepadName",{C_INT,C_POINTER},C_BOOL),
+				xGetGamepadName = define_c_func(ray,"+GetGamepadName",{C_INT},C_POINTER),
+				xIsGamepadButtonPressed = define_c_func(ray,"+IsGamepadButtonPressed",{C_INT,C_INT},C_BOOL),
+				xIsGamepadButtonDown = define_c_func(ray,"+IsGamepadButtonDown",{C_INT,C_INT},C_BOOL),
+				xIsGamepadButtonReleased = define_c_func(ray,"+IsGamepadButtonReleased",{C_INT,C_INT},C_BOOL),
+				xIsGamepadButtonUp = define_c_func(ray,"+IsGamepadButtonUp",{C_INT,C_INT},C_BOOL),
+				xGetGamepadButtonPressed = define_c_func(ray,"+GameGamepadButtonPressed",{},C_INT),
+				xGetGamepadAxisCount = define_c_func(ray,"+GetGamepadAxisCount",{C_INT},C_INT),
+				xGetGamepadAxisMovement = define_c_func(ray,"+GetGamepadAxisMovement",{C_INT,C_INT},C_FLOAT)
+				
+public function IsGamepadAvailable(atom pad)
+
+ return c_func(xIsGamepadAvailable,{pad})
+	
+end function
+
+public function IsGamepadName(atom pad,sequence name)
+
+ atom str = allocate_string(name,1)
+ 
+ return c_func(xIsGamepadName,{pad,str})
+	
+end function
+
+public function GetGamepadName(atom pad)
+
+ return c_func(xGetGamepadName,{pad})
+	
+end function
+
+public function IsGamepadButtonPressed(atom pad,atom btn)
+
+ return c_func(xIsGamepadButtonPressed,{pad,btn})
+	
+end function
+
+public function IsGamepadButtonDown(atom pad,atom btn)
+
+ return c_func(xIsGamepadButtonDown,{pad,btn})
+	
+end function
+
+public function IsGamepadButtonReleased(atom pad,atom btn)
+
+ return c_func(xIsGamepadButtonReleased,{pad,btn})
+	
+end function
+
+public function IsGamepadButtonUp(atom pad,atom btn)
+
+ return c_func(xIsGamepadButtonUp,{pad,btn})
+	
+end function
+
+public function GetGamepadButtonPressed()
+
+ return c_func(xGetGamepadButtonPressed,{})
+	
+end function
+
+public function GetGamepadAxisCount(atom pad)
+
+ return c_func(xGetGamepadAxisCount,{pad})
+	
+end function
+
+public function GetGamepadAxisMovement(atom pad,atom axis)
+
+ return c_func(xGetGamepadAxisMovement,{pad,axis})
+	
+end function
+
+--Input Functions (Mouse)
+
+public constant xIsMouseButtonPressed = define_c_func(ray,"+IsMouseButtonPressed",{C_INT},C_BOOL),
+				xIsMouseButtonDown = define_c_func(ray,"+IsMouseButtonDown",{C_INT},C_BOOL),
+				xIsMouseButtonReleased = define_c_func(ray,"+IsMouseButtonReleased",{C_INT},C_BOOL),
+				xIsMouseButtonUp = define_c_func(ray,"+IsMouseButtonUp",{C_INT},C_BOOL),
+				xGetMouseX = define_c_func(ray,"+GetMouseX",{},C_INT),
+				xGetMouseY = define_c_func(ray,"+GetMouseY",{},C_INT),
+				xGetMousePosition = define_c_func(ray,"+GetMousePosition",{},C_FLOAT),
+				xSetMousePosition = define_c_proc(ray,"+SetMousePosition",{C_INT,C_INT}),
+				xSetMouseOffset = define_c_proc(ray,"+SetMouseOffset",{C_INT,C_INT}),
+				xSetMouseScale = define_c_proc(ray,"+SetMouseScale",{C_FLOAT,C_FLOAT}),
+				xGetMouseWheelMove = define_c_func(ray,"+GetMouseWheelMove",{},C_INT)
+				
+public function IsMouseButtonPressed(atom btn)
+
+ return c_func(xIsMouseButtonPressed,{btn})
+	
+end function
+
+public function IsMouseButtonDown(atom btn)
+
+ return c_func(xIsMouseButtonDown,{btn})
+	
+end function
+
+public function IsMouseButtonReleased(atom btn)
+
+ return c_func(xIsMouseButtonReleased,{btn})
+	
+end function
+
+public function IsMouseButtonUp(atom btn)
+
+ return c_func(xIsMouseButtonUp,{btn})
+	
+end function
+
+public function GetMouseX()
+
+ return c_func(xGetMouseX,{})
+	
+end function
+
+public function GetMouseY()
+
+ return c_func(xGetMouseY,{})
+	
+end function
+
+public function GetMousePosition()
+
+ return c_func(xGetMousePosition,{})
+	
+end function
+
+public procedure SetMousePosition(atom x,atom y)
+
+ c_proc(xSetMousePosition,{x,y})
+	
+end procedure
+
+public procedure SetMouseOffset(atom x,atom y)
+
+ c_proc(xSetMouseOffset,{x,y})
+	
+end procedure
+
+public procedure SetMouseScale(atom x,atom y)
+
+ c_proc(xSetMouseScale,{x,y})
+	
+end procedure
+
+public function GetMouseWheelMove()
+
+ return c_func(xGetMouseWheelMove,{})
+	
+end function
+
+--Input Functions (Touch)
+
+public constant xGetTouchX = define_c_func(ray,"+GetTouchX",{},C_INT),
+				xGetTouchY = define_c_func(ray,"+GetTouchY",{},C_INT),
+				xGetTouchPosition = define_c_func(ray,"+GetTouchPosition",{},C_INT)
+				
+public function GetTouchX()
+
+ return c_func(xGetTouchX,{})
+	
+end function
+
+public function GetTouchY()
+
+ return c_func(xGetTouchY,{})
+	
+end function
+
+public function GetTouchPosition()
+
+ return c_func(xGetTouchPosition,{})
+	
+end function
+
+--Input Functions (Gestures)
+
+public constant xSetGesturesEnabled = define_c_proc(ray,"+SetGesturesEnabled",{C_UINT}),
+				xIsGestureDetected = define_c_func(ray,"+IsGestureDetected",{C_INT},C_BOOL),
+				xGetGestureDetected = define_c_func(ray,"+GetGestureDetected",{},C_INT),
+				xGetTouchPointsCount = define_c_func(ray,"+GetTouchPointsCount",{},C_INT),
+				xGetGestureHoldDuration = define_c_func(ray,"+GetGestureHoldDuration",{},C_FLOAT),
+				xGetGestureDragVector = define_c_func(ray,"+GetGestureDragVector",{},C_FLOAT),
+				xGetGestureDragAngle = define_c_func(ray,"+GetGestureDragAngle",{},C_FLOAT),
+				xGetGesturePinchVector = define_c_func(ray,"+GetGesturePinchVector",{},C_FLOAT),
+				xGetGesturePinchAngle = define_c_func(ray,"+GetGesturePinchAngle",{},C_FLOAT)
+				
+public procedure SetGesturesEnabled(atom flags)
+
+ c_proc(xSetGesturesEnabled,{flags})
+	
+end procedure
+
+public function IsGestureDetected(atom ges)
+
+ return c_func(xIsGestureDetected,{ges})
+	
+end function
+
+public function GetGestureDetected()
+
+ return c_func(xGetGestureDetected,{})
+	
+end function
+
+public function GetTouchPointsCount()
+
+ return c_func(xGetTouchPointsCount,{})
+	
+end function
+
+public function GetGestureHoldDuration()
+
+ return c_func(xGetGestureHoldDuration,{})
+	
+end function
+
+public function GetGestureDragVector()
+
+ return c_func(xGetGestureDragVector,{})
+	
+end function
+
+public function GetGestureDragAngle()
+
+ return c_func(xGetGestureDragAngle,{})
+	
+end function
+
+public function GetGesturePinchVector()
+
+ return c_func(xGetGesturePinchVector,{})
+	
+end function
+
+public function GetGesturePinchAngle()
+
+ return c_func(xGetGesturePinchAngle,{})
+	
+end function
+
+--Camera Functions
+
+public constant xSetCameraMode = define_c_proc(ray,"+SetCameraMode",{C_POINTER,C_INT}),
+				xUpdateCamera = define_c_proc(ray,"+UpdateCamera",{C_POINTER}),
+				xSetCameraPanControl = define_c_proc(ray,"+SetCameraPanControl",{C_INT}),
+				xSetCameraAltControl = define_c_proc(ray,"+SetCameraAltControl",{C_INT}),
+				xSetCameraSmoothZoomControl = define_c_proc(ray,"+SetCameraSmoothZoomControl",{C_INT}),
+				xSetCameraMoveControls = define_c_proc(ray,"+SetCameraMoveControls",{C_INT,C_INT,C_INT,C_INT,C_INT,C_INT})
+				
+public procedure SetCameraMode(atom cam,atom mod)
+
+ c_proc(xSetCameraMode,{cam,mod})
+	
+end procedure
+
+public procedure UpdateCamera(atom cam)
+
+ c_proc(xUpdateCamera,{cam})
+	
+end procedure
+
+public procedure SetCameraPanControl(atom pan)
+
+ c_proc(xSetCameraPanControl,{pan})
+	
+end procedure
+
+public procedure SetCameraAltControl(atom alt)
+
+ c_proc(xSetCameraAltControl,{alt})
+	
+end procedure
+
+public procedure SetCameraSmoothZoomControl(atom sz)
+
+ c_proc(xSetCameraSmoothZoomControl,{sz})
+	
+end procedure
+
+public procedure SetCameraMoveControls(atom front,atom back,atom right,atom left,atom up,atom down)
+
+ c_proc(xSetCameraMoveControls,{front,back,right,left,up,down})
+	
+end procedure
+
+--End of Core Module Functions
+
+--Shape Module Functions
+
+public constant xDrawPixel = define_c_proc(ray,"+DrawPixel",{C_INT,C_INT,C_UINT}),
+				xDrawPixelV = define_c_proc(ray,"+DrawPixelV",{C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawLine = define_c_proc(ray,"+DrawLine",{C_INT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawLineV = define_c_proc(ray,"+DrawLineV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawLineEx = define_c_proc(ray,"+DrawLineEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawLineBezier = define_c_proc(ray,"+DrawLineBezier",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawLineStrip = define_c_proc(ray,"+DrawLineStrip",{C_POINTER,C_POINTER,C_INT,C_UINT}),
+				xDrawCircle = define_c_proc(ray,"+DrawCircle",{C_INT,C_INT,C_FLOAT,C_UINT}),
+				xDrawCircleSector = define_c_proc(ray,"+DrawCircleSector",{C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawCircleSectorLines = define_c_proc(ray,"+DrawCircleSectorLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawCircleGradient = define_c_proc(ray,"+DrawCircleGradient",{C_INT,C_INT,C_FLOAT,C_POINTER,C_UINT}),
+				xDrawCircleV = define_c_proc(ray,"+DrawCircleV",{C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCircleLines = define_c_proc(ray,"+DrawCircleLines",{C_INT,C_INT,C_FLOAT,C_UINT}),
+				xDrawRing = define_c_proc(ray,"+DrawRing",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawRingLines = define_c_proc(ray,"+DrawRingLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawRectangle = define_c_proc(ray,"+DrawRectangle",{C_INT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawRectangleV = define_c_proc(ray,"+DrawRectangleV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawRectangleRec = define_c_proc(ray,"+DrawRectangleRec",{C_POINTER,C_UINT}),
+				xDrawRectanglePro = define_c_proc(ray,"+DrawRectanglePro",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawRectangleGradientV = define_c_proc(ray,"+DrawRectangleGradientV",{C_INT,C_INT,C_INT,C_INT,C_UINT,C_UINT}),
+				xDrawRectangleGradientH = define_c_proc(ray,"+DrawRectangleGradientH",{C_INT,C_INT,C_INT,C_INT,C_UINT,C_UINT}),
+				xDrawRectangleGradientEx = define_c_proc(ray,"+DrawRectangleGradientEx",{C_POINTER,C_UINT,C_UINT,C_UINT,C_UINT}),
+				xDrawRectangleLines = define_c_proc(ray,"+DrawRectangleLines",{C_INT,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawRectangleLinesEx = define_c_proc(ray,"+DrawRectangleLinesEx",{C_POINTER,C_INT,C_UINT}),
+				xDrawRectangleRounded = define_c_proc(ray,"+DrawRectangleRounded",{C_POINTER,C_FLOAT,C_INT,C_UINT}),
+				xDrawRectangleRoundedLines = define_c_proc(ray,"+DrawRectangleRoundedLines",{C_POINTER,C_FLOAT,C_INT,C_INT,C_UINT}),
+				xDrawTriangle = define_c_proc(ray,"+DrawTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTriangleLines = define_c_proc(ray,"+DrawTriangleLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTriangleFan = define_c_proc(ray,"+DrawTriangleFan",{C_POINTER,C_POINTER,C_INT,C_UINT}),
+				xDrawPoly = define_c_proc(ray,"+DrawPoly",{C_FLOAT,C_FLOAT,C_INT,C_FLOAT,C_FLOAT,C_UINT}),
+				xSetShapesTexture = define_c_proc(ray,"+SetShapesTexture",{C_POINTER,C_POINTER}),
+				xCheckCollisionRecs = define_c_func(ray,"+CheckCollisionRecs",{C_POINTER,C_POINTER},C_BOOL),
+				xCheckCollisionCircles = define_c_func(ray,"+CheckCollisionCircles",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionCircleRec = define_c_func(ray,"+CheckCollisionCircleRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_BOOL),
+				xGetCollisionRec = define_c_func(ray,"+GetCollisionRec",{C_POINTER,C_POINTER},C_POINTER),
+				xCheckCollisionPointRec = define_c_func(ray,"+CheckCollisionPointRec",{C_FLOAT,C_FLOAT},C_POINTER),
+				xCheckCollisionPointCircle = define_c_func(ray,"+CheckCollisionPointCircle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionPointTrangle = define_c_func(ray,"+CheckCollisionPointTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
+				
+public procedure DrawPixel(atom x,atom y,atom col)
+
+ c_proc(xDrawPixel,{x,y,col})
+	
+end procedure
+
+public procedure DrawPixelV(atom x,atom y,atom col)
+
+ c_proc(xDrawPixelV,{x,y,col})
+	
+end procedure
+
+public procedure DrawLine(atom x,atom y,atom x2,atom y2,atom col)
+
+ c_proc(xDrawLine,{x,y,x2,y2,col})
+	
+end procedure
+
+public procedure DrawLineV(atom x,atom y,atom x2,atom y2,atom col)
+
+ c_proc(xDrawLineV,{x,y,x2,y2})
+	
+end procedure
+
+public procedure DrawLineEx(atom x,atom y,atom x2,atom y2,atom thick,atom col)
+
+ c_proc(xDrawLineEx,{x,y,x2,y2,thick,col})
+	
+end procedure
+
+public procedure DrawLineBezier(atom x,atom y,atom x2,atom y2,atom thick,atom col)
+
+ c_proc(xDrawLineBezier,{x,y,x2,y2,thick,col})
+	
+end procedure
+
+public procedure DrawLineStrip(atom x,atom y,atom num,atom col)
+
+ c_proc(xDrawLineStrip,{x,y,num,col})
+	
+end procedure
+
+public procedure DrawCircle(atom x,atom y,atom rad,atom col)
+
+ c_proc(xDrawCircle,{x,y,rad,col})
+	
+end procedure
+
+public procedure DrawCircleSector(atom x,atom y,atom rad,atom start,atom xend,atom segs,atom col)
+
+ c_proc(xDrawCircleSector,{x,y,rad,start,xend,segs,col})
+	
+end procedure
+
+public procedure DrawCircleSectorLines(atom x,atom y,atom rad,atom start,atom segs,atom col)
+
+ c_proc(xDrawCircleSectorLines,{x,y,rad,start,segs,col})
+	
+end procedure
+
+public procedure DrawCircleGradient(atom x,atom y,atom rad,atom col,atom col2)
+
+ c_proc(xDrawCircleGradient,{x,y,rad,col,col2})
+	
+end procedure
+
+public procedure DrawCircleV(atom x,atom y,atom rad,atom col)
+
+ c_proc(xDrawCircleV,{x,y,rad,col})
+	
+end procedure
+
+public procedure DrawCircleLines(atom x,atom y,atom rad,atom col)
+
+ c_proc(xDrawCircleLines,{x,y,rad,col})
+	
+end procedure
+
+public procedure DrawRing(atom x,atom y,atom inner,atom outer,atom start,atom xend,atom segs,atom col)
+
+ c_proc(xDrawRing,{x,y,inner,outer,start,xend,segs,col})
+	
+end procedure
+
+public procedure DrawRingLines(atom x,atom y,atom inner,atom outer,atom start,atom xend,atom segs,atom col)
+
+ c_proc(xDrawRingLines,{x,y,inner,outer,start,xend,segs,col})
+	
+end procedure
+
+public procedure DrawRectangle(atom x,atom y,atom w,atom h,atom col)
+
+ c_proc(xDrawRectangle,{x,y,w,h,col})
+	
+end procedure
+
+public procedure DrawRectangleV(atom x,atom y,atom x2,atom y2,atom col)
+
+ c_proc(xDrawRectangleV,{x,y,x2,y2,col})
+	
+end procedure
+
+public procedure DrawRectangleRec(atom rec,atom col)
+
+ c_proc(xDrawRectangleRec,{rec,col})
+	
+end procedure
+
+public procedure DrawRectanglePro(atom rec,atom x,atom y,atom rot,atom col)
+
+ c_proc(xDrawRectanglePro,{rec,x,y,rot,col})
+	
+end procedure
+
+public procedure DrawRectangleGradientV(atom x,atom y,atom w,atom h,atom col,atom col2)
+
+ c_proc(xDrawRectangleGradientV,{x,y,w,h,col,col2})
+	
+end procedure
+
+public procedure DrawRectangleGradientH(atom x,atom y,atom w,atom h,atom col,atom col2)
+
+ c_proc(xDrawRectangleGradientH,{x,y,w,h,col,col2})
+	
+end procedure
+
+public procedure DrawRectangleGradientEx(atom rec,atom col,atom col2,atom col3,atom col4)
+
+ c_proc(xDrawRectangleGradientEx,{rec,col,col2,col3,col4})
+	
+end procedure
+
+public procedure DrawRectangleLines(atom x,atom y,atom w,atom h,atom col)
+
+ c_proc(xDrawRectangleLines,{x,y,w,h,col})
+	
+end procedure
+
+public procedure DrawRectangleLinesEx(atom rec,atom thick,atom col)
+
+ c_proc(xDrawRectangleLinesEx,{rec,thick,col})
+	
+end procedure
+
+public procedure DrawRectangleRounded(atom rec,atom round,atom segs,atom col)
+
+ c_proc(xDrawRectangleRounded,{rec,round,segs,col})
+	
+end procedure
+
+public procedure DrawRectangleRoundedLines(atom rec,atom round,atom segs,atom thick,atom col)
+
+ c_proc(xDrawRectangleRoundedLines,{rec,round,segs,thick,col})
+	
+end procedure
+
+public procedure DrawTriangle(atom x,atom y,atom x2,atom y2,atom x3,atom y3,atom col)
+
+ c_proc(xDrawTriangle,{x,y,x2,y2,x3,y3,col})
+	
+end procedure
+
+public procedure DrawTriangleLines(atom x,atom y,atom x2,atom y2,atom x3,atom y3,atom col)
+
+ c_proc(xDrawTriangleLines,{x,y,x2,y2,x3,y3,col})
+	
+end procedure
+
+public procedure DrawTriangleFan(atom x,atom y,atom num,atom col)
+
+ c_proc(xDrawTriangleFan,{x,y,num,col})
+	
+end procedure
+
+public procedure DrawPoly(atom x,atom y,atom sides,atom rad,atom rot,atom col)
+
+ c_proc(xDrawPoly,{x,y,sides,rad,rot,col})
+	
+end procedure
+
+public procedure SetShapesTexture(atom tex,atom src)
+
+ c_proc(xSetShapesTexture,{tex,src})
+	
+end procedure
+
+public function CheckCollisionRecs(atom rec,atom rec2)
+
+ return c_func(xCheckCollisionRecs,{rec,rec2})
+	
+end function
+
+public function CheckCollisionCircles(atom x,atom y,atom rad,atom x2,atom y2,atom rad2)
+
+ return c_func(xCheckCollisionCircles,{x,y,rad,x2,y2,rad2})
+	
+end function
+
+public function CheckCollisionCircleRec(atom x,atom y,atom rad,atom rec)
+
+ return c_func(xCheckCollisionCircleRec,{x,y,rad,rec})
+	
+end function
+
+public function GetCollisionRec(atom rec,atom rec2)
+
+ return c_func(xGetCollisionRec,{rec,rec2})
+	
+end function
+
+public function CheckCollisionPointRec(atom x,atom y,atom rec)
+
+ return c_func(xCheckCollisionPointRec,{x,y,rec})
+	
+end function
+
+--End Shape Module Functions
+
+--Texture Module Functions
+
+public constant xLoadImage = define_c_func(ray,"+LoadImage",{C_POINTER},C_POINTER),
+				xLoadImageEx = define_c_func(ray,"+LoadImageEx",{C_POINTER,C_INT,C_INT},C_POINTER),
+				xLoadImagePro = define_c_func(ray,"+LoadImagePro",{C_POINTER,C_INT,C_INT,C_INT},C_POINTER),
+				xLoadImageRaw = define_c_func(ray,"+LoadImageRaw",{C_POINTER,C_INT,C_INT,C_INT,C_INT},C_POINTER),
+				xExportImage = define_c_proc(ray,"+ExportImage",{C_POINTER,C_POINTER}),
+				xExportImageAsCode = define_c_proc(ray,"+ExportImageAsCode",{C_POINTER,C_POINTER}),
+				xLoadTexture = define_c_func(ray,"+LoadTexture",{C_POINTER},C_POINTER),
+				xLoadTextureFromImage = define_c_func(ray,"+LoadTextureFromImage",{C_POINTER},C_POINTER),
+				xLoadTextureCubemap = define_c_func(ray,"+LoadTextureCubemap",{C_POINTER,C_INT},C_POINTER),
+				xLoadRenderTexture = define_c_func(ray,"+LoadRenderTexture",{C_INT,C_INT},C_POINTER),
+				xUnloadImage = define_c_proc(ray,"+UnloadImage",{C_POINTER}),
+				xUnloadRenderTexture = define_c_proc(ray,"+UnloadRenderTexture",{C_POINTER}),
+				xUnloadTexture = define_c_proc(ray,"+UnloadTexture",{C_POINTER}),
+				xGetImageData = define_c_func(ray,"+GetImageData",{C_POINTER},C_POINTER),
+				xGetImageDataNormalized = define_c_func(ray,"+GetImageDataNormalized",{C_POINTER},C_FLOAT),
+				xGetPixelDataSize = define_c_func(ray,"+GetPixelDataSize",{C_INT,C_INT,C_INT},C_INT),
+				xGetTextureData = define_c_func(ray,"+GetTextureData",{C_POINTER},C_POINTER),
+				xGetScreenData = define_c_func(ray,"+GetScreenData",{},C_POINTER),
+				xUpdateTexture = define_c_proc(ray,"+UpdateTexture",{C_POINTER,C_POINTER})
+				
+public function LoadImage(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadImage,{str})
+	
+end function
+
+public function LoadImageEx(atom pix,atom w,atom h)
+
+ return c_func(xLoadImageEx,{pix,w,h})
+	
+end function
+
+public function LoadImagePro(object data,atom w,atom h,atom format)
+
+ return c_func(xLoadImagePro,{data,w,h,format})
+	
+end function
+
+public function LoadImageRaw(sequence file,atom w,atom h,atom format,atom size)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadImageRaw,{str,w,h,format,size})
+	
+end function
+
+public procedure ExportImage(atom img,sequence file)
+
+ atom str = allocate_string(file,1)
+  
+ c_proc(xExportImage,{img,str})
+	
+end procedure
+
+public procedure ExportImageAsCode(atom img,sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ c_proc(xExportImageAsCode,{img,str})
+	
+end procedure
+
+public function LoadTexture(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadTexture,{str})
+	
+end function
+
+public function LoadTextureFromImage(atom img)
+
+ return c_func(xLoadTextureFromImage,{img})
+	
+end function
+
+public function LoadTextureCubemap(atom img,atom xtype)
+
+ return c_func(xLoadTextureCubemap,{img,xtype})
+	
+end function
+
+public function LoadRenderTexture(atom w,atom h)
+
+ return c_func(xLoadRenderTexture,{w,h})
+	
+end function
+
+public procedure UnloadImage(atom img)
+
+ c_proc(xUnloadImage,{img})
+	
+end procedure
+
+public procedure UnloadTexture(atom tex)
+
+ c_proc(xUnloadTexture,{tex})
+	
+end procedure
+
+public procedure UnloadRenderTexture(atom target)
+
+ c_proc(xUnloadRenderTexture,{target})
+	
+end procedure
+
+public function GetImageData(atom img)
+
+ return c_func(xGetImageData,{img})
+	
+end function
+
+public function GetImageDataNormalized(atom img)
+
+ return c_func(xGetImageDataNormalized,{img})
+	
+end function
+
+public function GetPixelDataSize(atom w,atom h,atom format)
+
+ return c_func(xGetPixelDataSize,{w,h,format})
+	
+end function
+
+public function GetTextureData(atom tex)
+
+ return c_func(xGetTextureData,{tex})
+	
+end function
+
+public function GetScreenData()
+
+ return c_func(xGetScreenData,{})
+	
+end function
+
+public procedure UpdateTexture(atom tex,object pix)
+
+ c_proc(xUpdateTexture,{tex,pix})
+	
+end procedure
+
+--Image manipulation 
+
+public constant xImageCopy = define_c_func(ray,"+ImageCopy",{C_POINTER},C_POINTER),
+				xImageToPOT = define_c_proc(ray,"+ImageToPOT",{C_POINTER,C_UINT}),
+				xImageFormat = define_c_proc(ray,"+ImageFormat",{C_POINTER,C_INT}),
+				xImageAlphaMask = define_c_proc(ray,"+ImageAlphaMask",{C_POINTER,C_POINTER}),
+				xImageAlphaClear = define_c_proc(ray,"+ImageAlphaClear",{C_POINTER,C_POINTER,C_FLOAT}),
+				xImageAlphaCrop = define_c_proc(ray,"+ImageAlphaCrop",{C_POINTER,C_FLOAT}),
+				xImageAlphaPremultiply = define_c_proc(ray,"+ImageAlphaPremultiply",{C_POINTER}),
+				xImageCrop = define_c_proc(ray,"+ImageCrop",{C_POINTER,C_POINTER}),
+				xImageResize = define_c_proc(ray,"+ImageResize",{C_POINTER,C_INT,C_INT}),
+				xImageResizeNN = define_c_proc(ray,"+ImageResizeNN",{C_POINTER,C_INT,C_INT}),
+				xImageResizeCanvas = define_c_proc(ray,"+ImageResizeCanvas",{C_POINTER,C_INT,C_INT,C_INT,C_INT,C_UINT}),
+				xImageMipmaps = define_c_proc(ray,"+ImageMipmaps",{C_POINTER}),
+				xImageDither = define_c_proc(ray,"+ImageDither",{C_POINTER,C_INT,C_INT,C_INT,C_INT}),
+				xImageExtractPalette = define_c_func(ray,"+ImageExtractPalette",{C_POINTER,C_INT,C_POINTER},C_POINTER),
+				xImageText = define_c_func(ray,"+ImageText",{C_POINTER,C_INT,C_UINT},C_POINTER),
+				xImageTextEx = define_c_func(ray,"+ImageTextEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT},C_POINTER),
+				xImageDraw = define_c_proc(ray,"+ImageDraw",{C_POINTER,C_POINTER,C_POINTER,C_POINTER}),
+				xImageDrawRectangle = define_c_proc(ray,"+ImageDrawRectangle",{C_POINTER,C_POINTER,C_UINT}),
+				xImageDrawRectangleLines = define_c_proc(ray,"+ImageDrawRectangleLines",{C_POINTER,C_POINTER,C_INT,C_UINT}),
+				xImageDrawText = define_c_proc(ray,"+ImageDrawText",{C_POINTER,C_FLOAT,C_FLOAT,C_POINTER,C_INT,C_UINT}),
+				xImageDrawTextEx = define_c_proc(ray,"+ImageDrawTextEx",{C_POINTER,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
+				xImageFlipVertical = define_c_proc(ray,"+ImageFlipVertical",{C_POINTER}),
+				xImageFlipHorizontal = define_c_proc(ray,"+ImageFlipHorizontal",{C_POINTER}),
+				xImageRotateCW = define_c_proc(ray,"+ImageRotateCW",{C_POINTER}),
+				xImageRotateCCW = define_c_proc(ray,"+ImageRotateCCW",{C_POINTER}),
+				xImageColorTint = define_c_proc(ray,"+ImageColorTint",{C_POINTER,C_UINT}),
+				xImageColorInvert = define_c_proc(ray,"+ImageColorInvert",{C_POINTER}),
+				xImageColorGrayscale = define_c_proc(ray,"+ImageColorGrayscale",{C_POINTER}),
+				xImageColorContrast = define_c_proc(ray,"+ImageColorContrast",{C_POINTER,C_FLOAT}),
+				xImageColorBrightness = define_c_proc(ray,"+ImageColorBrightness",{C_POINTER,C_INT}),
+				xImageColorReplace = define_c_proc(ray,"+ImageColorReplace",{C_POINTER,C_UINT,C_UINT})
+				
+public function ImageCopy(atom img)
+
+ return c_func(xImageCopy,{img})
+	
+end function
+
+public procedure ImageToPOT(atom img,atom col)
+
+ c_proc(xImageToPOT,{img,col})
+	
+end procedure
+
+public procedure ImageFormat(atom img,atom format)
+
+ c_proc(xImageFormat,{img,format})
+	
+end procedure
+
+public procedure ImageAlphaMask(atom img,atom mask)
+
+ c_proc(xImageAlphaMask,{img,mask})
+	
+end procedure
+
+public procedure ImageAlphaClear(atom img,atom col,atom hold)
+
+ c_proc(xImageAlphaClear,{img,col,hold})
+	
+end procedure
+
+public procedure ImageAlphaCrop(atom img,atom hold)
+
+ c_proc(xImageAlphaCrop,{img,hold})
+	
+end procedure
+
+public procedure ImageAlphaPremultiply(atom img)
+
+ c_proc(xImageAlphaPremultiply,{img})
+	
+end procedure
+
+public procedure ImageCrop(atom img,atom crop)
+
+ c_proc(xImageCrop,{img,crop})
+	
+end procedure
+
+public procedure ImageResize(atom img,atom w,atom h)
+
+ c_proc(xImageResize,{img,w,h})
+	
+end procedure
+
+public procedure ImageResizeNN(atom img,atom w,atom h)
+
+ c_proc(xImageResizeNN,{img,w,h})
+	
+end procedure
+
+public procedure ImageResizeCanvas(atom img,atom w,atom h,atom x,atom y,atom col)
+
+ c_proc(xImageResizeCanvas,{img,w,h,x,y,col})
+	
+end procedure
+
+public procedure ImageMipmaps(atom img)
+
+ c_proc(xImageMipmaps,{img})
+	
+end procedure
+
+public procedure ImageDither(atom img,atom r,atom g,atom b,atom a)
+
+ c_proc(xImageDither,{img,r,g,b,a})
+	
+end procedure
+
+public function ImageExtractPalette(atom img,atom max,atom count)
+
+ return c_func(xImageExtractPalette,{img,max,count})
+	
+end function
+
+public function ImageText(sequence file,atom size,atom col)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xImageText,{str,size,col})
+	
+end function
+
+public function ImageTextEx(atom font,sequence text,atom size,atom space,atom tint)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xImageTextEx,{font,str,size,space,tint})
+	
+end function
+
+public procedure ImageDraw(atom dst,atom src,atom srcrec,atom dstrec)
+
+ c_proc(xImageDraw,{dst,src,srcrec,dstrec})
+	
+end procedure
+
+public procedure ImageDrawRectangle(atom dst,atom rec,atom col)
+
+ c_proc(xImageDrawRectangle,{dst,rec,col})
+	
+end procedure
+
+public procedure ImageDrawRectangleLines(atom dst,atom rec,atom thick,atom col)
+
+ c_proc(xImageDrawRectangleLines,{dst,rec,thick,col})
+	
+end procedure
+
+public procedure ImageDrawText(atom dst,atom x,atom y,sequence text,atom size,atom col)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xImageDrawText,{dst,x,y,str,size,col})
+	
+end procedure
+
+public procedure ImageDrawTextEx(atom dst,atom x,atom y,atom font,sequence text,atom size,atom space,atom col)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xImageDrawTextEx,{dst,x,y,font,str,size,space,col})
+	
+end procedure
+
+public procedure ImageFlipVertical(atom img)
+
+ c_proc(xImageFlipVertical,{img})
+	
+end procedure
+
+public procedure ImageFlipHorizontal(atom img)
+
+ c_proc(xImageFlipHorizontal,{img})
+	
+end procedure
+
+public procedure ImageRotateCW(atom img)
+
+ c_proc(xImageRotateCW,{img})
+	
+end procedure
+
+public procedure ImageRotateCCW(atom img)
+
+ c_proc(xImageRotateCCW,{img})
+	
+end procedure
+
+public procedure ImageColorTint(atom img,atom col)
+
+ c_proc(xImageColorTint,{img,col})
+	
+end procedure
+
+public procedure ImageColorInvert(atom img)
+
+ c_proc(xImageColorInvert,{img})
+	
+end procedure
+
+public procedure ImageColorGrayscale(atom img)
+
+ c_proc(xImageColorGrayscale,{img})
+	
+end procedure
+
+public procedure ImageColorContrast(atom img,atom con)
+
+ c_proc(xImageColorContrast,{img,con})
+	
+end procedure
+
+public procedure ImageColorBrightness(atom img,atom bright)
+
+ c_proc(xImageColorBrightness,{img,bright})
+	
+end procedure
+
+public procedure ImageColorReplace(atom img,atom col,atom replace)
+
+ c_proc(xImageColorReplace,{img,col,replace})
+	
+end procedure
+
+--Image Generation
+
+public constant xGenImageColor = define_c_func(ray,"+GenImageColor",{C_INT,C_INT,C_UINT},C_POINTER),
+				xGenImageGradientV = define_c_func(ray,"+GenImageGradientV",{C_INT,C_INT,C_UINT,C_UINT},C_POINTER),
+				xGenImageGradientH = define_c_func(ray,"+GenImageGradientH",{C_INT,C_INT,C_UINT,C_UINT},C_POINTER),
+				xGenImageGradientRadial = define_c_func(ray,"+GenImageGradientRadial",{C_INT,C_INT,C_FLOAT,C_UINT,C_UINT},C_POINTER),
+				xGenImageChecked = define_c_func(ray,"+GenImageChecked",{C_INT,C_INT,C_INT,C_INT,C_UINT,C_UINT},C_POINTER),
+				xGenImageWhiteNoise = define_c_func(ray,"+GenImageWhiteNoise",{C_INT,C_INT,C_FLOAT},C_POINTER),
+				xGenImagePerlinNoise = define_c_func(ray,"+GenImagePerlinNoise",{C_INT,C_INT,C_INT,C_INT,C_FLOAT},C_POINTER),
+				xGenImageCellular = define_c_func(ray,"+GenImageCellular",{C_INT,C_INT,C_INT},C_POINTER)
+				
+public function GenImageColor(atom w,atom h,atom col)
+
+ return c_func(xGenImageColor,{w,h,col})
+	
+end function
+
+public function GenImageGradientV(atom w,atom h,atom top,atom bot)
+
+ return c_func(xGenImageGradientV,{w,h,top,bot})
+	
+end function
+
+public function GenImageGradientH(atom w,atom h,atom left,atom right)
+
+ return c_func(xGenImageGradientH,{w,h,left,right})
+	
+end function
+
+public function GenImageGradientRadial(atom w,atom h,atom dens,atom inner,atom outer)
+
+ return c_func(xGenImageGradientRadial,{w,h,dens,inner,outer})
+	
+end function
+
+public function GenImageChecked(atom w,atom h,atom x,atom y,atom col,atom col2)
+
+ return c_func(xGenImageChecked,{w,h,x,y,col,col2})
+	
+end function
+
+public function GenImageWhiteNoise(atom w,atom h,atom fac)
+
+ return c_func(xGenImageWhiteNoise,{w,h,fac})
+	
+end function
+
+public function GenImagePerlinNoise(atom w,atom h,atom x,atom y,atom scale)
+
+ return c_func(xGenImagePerlinNoise,{w,h,x,y,scale})
+	
+end function
+
+public function GenImageCelluar(atom w,atom h,atom size)
+
+ return c_func(xGenImageCellular,{w,h,size})
+	
+end function
+
+--Texture Config
+
+public constant xGenTextureMipmaps = define_c_proc(ray,"+GenTextureMipmaps",{C_POINTER}),
+				xSetTextureFilter = define_c_proc(ray,"+SetTextureFilter",{C_POINTER,C_INT}),
+				xSetTextureWrap = define_c_proc(ray,"+SetTextureWrap",{C_POINTER,C_INT})
+				
+public procedure GenTextureMipmaps(atom tex)
+
+ c_proc(xGenTextureMipmaps,{tex})
+	
+end procedure
+
+public procedure SetTextureFilter(atom tex,atom mode)
+
+ c_proc(xSetTextureFilter,{tex,mode})
+	
+end procedure
+
+public procedure SetTextureWrap(atom tex,atom mode)
+
+ c_proc(xSetTextureWrap,{tex,mode})
+	
+end procedure
+
+--Texture Drawing
+
+public constant xDrawTexture = define_c_proc(ray,"+DrawTexture",{C_POINTER,C_INT,C_INT,C_UINT}),
+				xDrawTextureV = define_c_proc(ray,"+DrawTextureV",{C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureEx = define_c_proc(ray,"+DrawTextureEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureRec = define_c_proc(ray,"+DrawTextureRec",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureQuad = define_c_proc(ray,"+DrawTextureQuad",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_UINT}),
+				xDrawTexturePro = define_c_proc(ray,"+DrawTexturePro",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureNPatch = define_c_proc(ray,"+DrawTextureNPatch",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+				
+public procedure DrawTexture(atom tex,atom x,atom y,atom tint)
+
+ c_proc(xDrawTexture,{tex,x,y,tint})
+	
+end procedure
+
+public procedure DrawTextureV(atom tex,atom x,atom y,atom tint)
+
+ c_proc(xDrawTextureV,{tex,x,y,tint})
+	
+end procedure
+
+public procedure DrawTextureEx(atom tex,atom x,atom y,atom rot,atom scale,atom tint)
+
+ c_proc(xDrawTextureEx,{tex,x,y,rot,scale,tint})
+	
+end procedure
+
+public procedure DrawTextureRec(atom tex,atom src,atom x,atom y,atom tint)
+
+ c_proc(xDrawTextureRec,{tex,src,x,y,tint})
+	
+end procedure
+
+public procedure DrawTextureQuad(atom tex,atom x,atom y,atom x2,atom y2,atom quad,atom tint)
+
+ c_proc(xDrawTextureQuad,{tex,x,y,x2,y2,quad,tint})
+	
+end procedure
+
+public procedure DrawTexturePro(atom tex,atom src,atom dst,atom x,atom y,atom rot,atom tint)
+
+ c_proc(xDrawTexturePro,{tex,src,dst,x,y,rot,tint})
+	
+end procedure
+
+public procedure DrawTextureNPatch(atom tex,atom info,atom dest,atom x,atom y,atom rot,atom tint)
+
+ c_proc(xDrawTextureNPatch,{tex,info,dest,x,y,rot,tint})
+	
+end procedure
+
+--End Texture Module
+
+--Text Module Functions
+
+public constant xGetFontDefault = define_c_func(ray,"+GetFontDefault",{},C_POINTER),
+				xLoadFont = define_c_func(ray,"+LoadFont",{C_POINTER},C_POINTER),
+				xLoadFontEx = define_c_func(ray,"+LoadFontEx",{C_POINTER,C_INT,C_POINTER,C_INT},C_POINTER),
+				xLoadFontFromImage = define_c_func(ray,"+LoadFontFromImage",{C_POINTER,C_POINTER,C_INT},C_POINTER),
+				xLoadFontData = define_c_func(ray,"+LoadFontData",{C_POINTER,C_INT,C_POINTER,C_INT,C_INT},C_POINTER),
+				xGenImageFontAtlas = define_c_func(ray,"+GenImageFontAtlas",{C_POINTER,C_INT,C_INT,C_INT,C_INT},C_POINTER),
+				xUnloadFont = define_c_proc(ray,"+UnloadFont",{C_POINTER})
+				
+public function GetFontDefault()
+
+ return c_func(xGetFontDefault,{})
+	
+end function
+
+public function LoadFont(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadFont,{str})
+	
+end function
+
+public function LoadFontEx(sequence file,atom size,atom chars,atom count)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadFontEx,{str,size,chars,count})
+	
+end function
+
+public function LoadFontFromImage(atom img,atom xkey,atom char)
+
+ return c_func(xLoadFontFromImage,{img,xkey,char})
+	
+end function
+
+public function LoadFontData(sequence file,atom size,atom chars,atom count,atom xtype)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadFontData,{str,size,chars,count,xtype})
+	
+end function
+
+public function GenImageFontAtlas(atom chars,atom count,atom size,atom pad,atom method)
+
+ return c_func(xGenImageFontAtlas,{chars,count,size,pad,method})
+	
+end function
+
+public procedure UnloadFont(atom font)
+
+ c_proc(xUnloadFont,{font})
+	
+end procedure
+
+--Text Drawing
+
+public constant xDrawFPS = define_c_proc(ray,"+DrawFPS",{C_INT,C_INT}),
+				xDrawText = define_c_proc(ray,"+DrawText",{C_POINTER,C_INT,C_INT,C_INT,C_UINT}),
+				xDrawTextEx = define_c_proc(ray,"+DrawTextEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextRec = define_c_proc(ray,"+DrawTextRec",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_BOOL,C_UINT}),
+				xDrawTextRecEx = define_c_proc(ray,"+DrawTextRecEx",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_BOOL,C_UINT,C_INT,C_INT,C_UINT,C_UINT})
+				
+public procedure DrawFPS(atom x,atom y)
+
+ c_proc(xDrawFPS,{x,y})
+	
+end procedure
+
+public procedure DrawText(sequence text,atom x,atom y,atom size,atom col)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xDrawText,{str,x,y,size,col})
+	
+end procedure
+
+public procedure DrawTextEx(atom font,sequence text,atom x,atom y,atom size,atom space,atom tint)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xDrawTextEx,{font,str,x,y,size,space,tint})
+	
+end procedure
+
+public procedure DrawTextRec(atom font,sequence text,atom rec,atom size,atom space,atom xwrap,atom tint)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xDrawTextRec,{font,str,rec,size,space,xwrap,tint})
+	
+end procedure
+
+public procedure DrawTextRecEx(atom font,sequence text,atom rec,atom size,atom space,atom xwrap,atom tint,atom start,atom xlength,atom tex,atom back)
+
+ atom str = allocate_string(text,1)
+ 
+ c_proc(xDrawTextRecEx,{font,str,rec,size,space,xwrap,tint,start,xlength,tex,back})
+	
+end procedure
+
+--Text Misc
+
+public constant xMeasureText = define_c_func(ray,"+MeasureText",{C_POINTER,C_INT},C_INT),
+				xMeasureTextEx = define_c_func(ray,"+MeasureTextEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT},C_FLOAT),
+				xGetGlyphIndex = define_c_func(ray,"+GetGlyphIndex",{C_POINTER,C_INT},C_INT)
+				
+public function MeasureText(sequence text,atom size)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xMeasureText,{str,size})
+	
+end function
+
+public function MeasureTextEx(atom font,sequence text,atom size,atom space)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xMeasureTextEx,{font,str,size,space})
+	
+end function
+
+public function GetGlyphIndex(atom font,atom char)
+
+ return c_func(xGetGlyphIndex,{font,char})
+	
+end function
+
+--Text String Management
+
+public constant xTextIsEqual = define_c_func(ray,"+TextIsEqual",{C_POINTER,C_POINTER},C_BOOL),
+				xTextLength = define_c_func(ray,"+TextLength",{C_POINTER},C_UINT),
+				xTextFormat = define_c_func(ray,"+TextFormat",{C_POINTER},C_POINTER),
+				xTextSubtext = define_c_func(ray,"+TextSubtext",{C_POINTER,C_INT,C_INT},C_POINTER),
+				xTextReplace = define_c_func(ray,"+TextReplace",{C_POINTER,C_POINTER,C_POINTER},C_POINTER),
+				xTextInsert = define_c_func(ray,"+TextInsert",{C_POINTER,C_POINTER,C_INT},C_POINTER),
+				xTextJoin = define_c_func(ray,"+TextJoin",{C_POINTER,C_INT,C_POINTER},C_POINTER),
+				xTextSplit = define_c_func(ray,"+TextSplit",{C_POINTER,C_CHAR,C_POINTER},C_POINTER),
+				xTextAppend = define_c_proc(ray,"+TextAppend",{C_POINTER,C_POINTER,C_POINTER}),
+				xTextFindIndex = define_c_func(ray,"+TextFindIndex",{C_POINTER,C_POINTER},C_INT),
+				xTextToUpper = define_c_func(ray,"+TextToUpper",{C_POINTER},C_POINTER),
+				xTextToLower = define_c_func(ray,"+TextToLower",{C_POINTER},C_POINTER),
+				xTextToPascal = define_c_func(ray,"+TextToPascal",{C_POINTER},C_POINTER),
+				xTextToInteger = define_c_func(ray,"+TextToInteger",{C_POINTER},C_INT)
+				
+public function TextIsEqual(sequence text,sequence text2)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(text2,1)
+ 
+ return c_func(xTextIsEqual,{str,str2})
+	
+end function
+
+public function TextLength(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextLength,{str})
+	
+end function
+
+public function TextFormat(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextFormat,{str})
+	
+end function
+
+public function TextSubtext(sequence text,atom pos,atom xlen)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextSubtext,{str,pos,xlen})
+	
+end function
+
+public function TextReplace(sequence text,sequence rep,sequence xby)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(rep,1)
+ atom str3 = allocate_string(xby,1)
+ 
+ return c_func(xTextReplace,{str,str2,str3})
+	
+end function
+
+public function TextInsert(sequence text,sequence in,atom pos)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(in,1)
+ 
+ return c_func(xTextInsert,{str,str2,pos})
+	
+end function
+
+public function TextJoin(sequence text,atom count,sequence del)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(del,1)
+ 
+ return c_func(xTextJoin,{str,count,str2})
+	
+end function
+
+public function TextSplit(sequence text,sequence char,atom count)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(char,1)
+ 
+ return c_func(xTextSplit,{str,str2,count})
+	
+end function
+
+public procedure TextAppend(sequence text,sequence app,atom pos)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(app,1)
+ 
+ c_proc(xTextAppend,{str,str2,pos})
+	
+end procedure
+
+public function TextFindIndex(sequence text,sequence fin)
+
+ atom str = allocate_string(text,1)
+ atom str2 = allocate_string(fin,1)
+ 
+ return c_func(xTextFindIndex,{str,str2})
+	
+end function
+
+public function TextToUpper(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextToUpper,{str})
+	
+end function
+
+public function TextToLower(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextToLower,{str})
+	
+end function
+
+public function TextToPascal(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextToPascal,{str})
+	
+end function
+
+public function TextToInteger(sequence text)
+
+ atom str = allocate_string(text,1)
+ 
+ return c_func(xTextToInteger,{str})
+	
+end function
+
+--End Module Text
+
+--Model Module Functions
+
+public constant xDrawLine3D = define_c_proc(ray,"+DrawLine3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCircle3D = define_c_proc(ray,"+DrawCircle3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCube = define_c_proc(ray,"+DrawCube",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCubeV = define_c_proc(ray,"+DrawCubeV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCubeWires = define_c_proc(ray,"+DrawCubeWires",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawCubeTexture = define_c_proc(ray,"+DrawCubeTexture",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawSphere = define_c_proc(ray,"+DrawSphere",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawSphereEx = define_c_proc(ray,"+DrawSphereEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_UINT}),
+				xDrawSphereWires = define_c_proc(ray,"+DrawSphereWires",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_UINT}),
+				xDrawCylinder = define_c_proc(ray,"+DrawCylinder",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xDrawCylinderWires = define_c_proc(ray,"+DrawCylinderWires",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xDrawPlane = define_c_proc(ray,"+DrawPlane",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawRay = define_c_proc(ray,"+DrawRay",{C_POINTER,C_UINT}),
+				xDrawGrid = define_c_proc(ray,"+DrawGrid",{C_INT,C_FLOAT}),
+				xDrawGizmo = define_c_proc(ray,"+DrawGizmo",{C_FLOAT,C_FLOAT,C_FLOAT}),
+				xDrawCubeWiresV = define_c_proc(ray,"+DrawCubeWiresV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+				
+public procedure DrawLine3D(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom col)
+
+ c_proc(xDrawLine3D,{x,y,z,x2,y2,z2,col})
+	
+end procedure
+
+public procedure DrawCircle3D(atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2,atom rot,atom col)
+
+ c_proc(xDrawCircle3D,{x,y,z,rad,x2,y2,z2,rot,col})
+	
+end procedure
+
+public procedure DrawCube(atom x,atom y,atom z,atom w,atom h,atom len,atom col)
+
+ c_proc(xDrawCube,{x,y,z,w,h,len,col})
+	
+end procedure
+
+public procedure DrawCubeV(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom col)
+
+ c_proc(xDrawCubeV,{x,y,z,x2,y2,z2,col})
+	
+end procedure
+
+public procedure DrawCubeWires(atom x,atom y,atom z,atom w,atom h,atom len,atom col)
+
+ c_proc(xDrawCubeWires,{x,y,z,w,h,len,col})
+	
+end procedure
+
+public procedure DrawCubeWiresV(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom col)
+
+ c_proc(xDrawCubeWiresV,{x,y,z,x2,y2,z2,col})
+	
+end procedure
+
+public procedure DrawCubeTexture(atom tex,atom x,atom y,atom z,atom w,atom h,atom len,atom col)
+
+ c_proc(xDrawCubeTexture,{tex,x,y,z,w,h,len,col})
+	
+end procedure
+
+public procedure DrawSphere(atom x,atom y,atom z,atom rad,atom col)
+
+ c_proc(xDrawSphere,{x,y,z,rad,col})
+	
+end procedure
+
+public procedure DrawSphereEx(atom x,atom y,atom z,atom rad,atom rings,atom slices,atom col)
+
+ c_proc(xDrawSphereEx,{x,y,z,rad,rings,slices,col})
+	
+end procedure
+
+public procedure DrawSphereWires(atom x,atom y,atom z,atom rad,atom rings,atom slices,atom col)
+
+ c_proc(xDrawSphereWires,{x,y,z,rad,rings,slices,col})
+	
+end procedure
+
+public procedure DrawCylinder(atom x,atom y,atom z,atom rad,atom rad_bot,atom h,atom slices,atom col)
+
+ c_proc(xDrawCylinder,{x,y,z,rad,rad_bot,h,slices,col})
+	
+end procedure
+
+public procedure DrawCylinderWires(atom x,atom y,atom z,atom rad,atom rad_bot,atom h,atom slice,atom col)
+
+ c_proc(xDrawCylinderWires,{x,y,z,rad,rad_bot,slice,col})
+	
+end procedure
+
+public procedure DrawPlane(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom col)
+
+ c_proc(xDrawPlane,{x,y,z,x2,y2,z2,col})
+	
+end procedure
+
+public procedure DrawRay(atom ray,atom col)
+
+ c_proc(xDrawRay,{ray,col})
+	
+end procedure
+
+public procedure DrawGrid(atom slice,atom space)
+
+ c_proc(xDrawGrid,{slice,space})
+	
+end procedure
+
+public procedure DrawGizmo(atom x,atom y,atom z)
+
+ c_proc(xDrawGizmo,{x,y,z})
+	
+end procedure
+
+--Model loading
+
+public constant xLoadModel = define_c_func(ray,"+LoadModel",{C_POINTER},C_POINTER),
+				xLoadModelFromMesh = define_c_func(ray,"+LoadModelFromMesh",{C_POINTER},C_POINTER),
+				xUnloadModel = define_c_proc(ray,"+UnloadModel",{C_POINTER})
+				
+public function LoadModel(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadModel,{str})
+	
+end function
+
+public function LoadModelFromMesh(atom mesh)
+
+ return c_func(xLoadModelFromMesh,{mesh})
+	
+end function
+
+public procedure UnloadModel(atom mod)
+
+ c_proc(xUnloadModel,{mod})
+	
+end procedure
+
+--Mesh loading
+
+public constant xLoadMeshes = define_c_func(ray,"+LoadMeshes",{C_POINTER,C_POINTER},C_POINTER),
+				xExportMesh = define_c_proc(ray,"+ExportMesh",{C_POINTER,C_POINTER}),
+				xUnloadMesh = define_c_proc(ray,"+UnloadMesh",{C_POINTER})
+				
+public function LoadMeshes(sequence file,atom count)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadMeshes,{str,count})
+	
+end function
+
+public procedure ExportMesh(atom mesh,sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ c_proc(xExportMesh,{mesh,str})
+	
+end procedure
+
+public procedure UnloadMesh(atom mesh)
+
+ c_proc(xUnloadMesh,{mesh})
+	
+end procedure
+
+--Material Loading
+
+public constant xLoadMaterials = define_c_func(ray,"+LoadMaterials",{C_POINTER,C_POINTER},C_POINTER),
+				xLoadMaterialDefault = define_c_func(ray,"+LoadMaterialDefault",{},C_POINTER),
+				xUnloadMaterial = define_c_proc(ray,"+UnloadMaterial",{C_POINTER}),
+				xSetMaterialTexture = define_c_proc(ray,"+SetMaterialTexture",{C_POINTER,C_INT,C_POINTER}),
+				xSetModelMeshMaterial = define_c_proc(ray,"+SetModelMeshMaterial",{C_POINTER,C_INT,C_INT})
+				
+public function LoadMaterials(sequence file,atom count)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadMaterials,{str,count})
+	
+end function
+
+public function LoadMaterialDefault()
+
+ return c_func(xLoadMaterialDefault,{})
+	
+end function
+
+public procedure UnloadMaterial(atom mat)
+
+ c_proc(xUnloadMaterial,{mat})
+	
+end procedure
+
+public procedure SetMaterialTexture(atom mat,atom xtype,atom tex)
+
+ c_proc(xSetMaterialTexture,{mat,xtype,tex})
+	
+end procedure
+
+public procedure SetModelMeshMaterial(atom mod,atom id,atom mat_id)
+
+ c_proc(xSetModelMeshMaterial,{mod,id,mat_id})
+	
+end procedure
+
+--Model animations
+
+public constant xLoadModelAnimations = define_c_func(ray,"+LoadModelAnimations",{C_POINTER,C_POINTER},C_POINTER),
+				xUpdateModelAnimation = define_c_proc(ray,"+UpdateModelAnimation",{C_POINTER,C_POINTER,C_INT}),
+				xUnloadModelAnimation = define_c_proc(ray,"+UnloadModelAnimation",{C_POINTER}),
+				xIsModelAnimationValid = define_c_func(ray,"+IsModelAnimationValid",{C_POINTER,C_POINTER},C_BOOL)
+				
+public function LoadModelAnimations(sequence file,atom count)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadModelAnimations,{str,count})
+	
+end function
+
+public procedure UpdateModelAnimation(atom mod,atom ani,integer frame)
+
+ c_proc(xUpdateModelAnimation,{mod,ani,frame})
+	
+end procedure
+
+public procedure UnloadModelAnimation(atom anim)
+
+ c_proc(xUnloadModelAnimation,{anim})
+	
+end procedure
+
+public function IsModelAnimationValid(atom mod,atom ani)
+
+ return c_func(xIsModelAnimationValid,{mod,ani})
+	
+end function
+
+--Mesh generation
+
+public constant xGenMeshPoly = define_c_func(ray,"+GenMeshPoly",{C_INT,C_FLOAT},C_POINTER),
+				xGenMeshPlane = define_c_func(ray,"+GenMeshPlane",{C_FLOAT,C_FLOAT,C_INT,C_INT},C_POINTER),
+				xGenMeshCube = define_c_func(ray,"+GenMeshCube",{C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
+				xGenMeshSphere = define_c_func(ray,"+GenMeshSphere",{C_FLOAT,C_INT,C_INT},C_POINTER),
+				xGenMeshHemiSphere = define_c_func(ray,"+GenMeshHemiSphere",{C_FLOAT,C_INT,C_INT},C_POINTER),
+				xGenMeshCylinder = define_c_func(ray,"+GenMeshCylinder",{C_FLOAT,C_FLOAT,C_INT},C_POINTER),
+				xGenMeshTorus = define_c_func(ray,"+GenMeshTorus",{C_FLOAT,C_FLOAT,C_INT,C_INT},C_POINTER),
+				xGenMeshKnot = define_c_func(ray,"+GenMeshKnot",{C_FLOAT,C_FLOAT,C_INT,C_INT},C_POINTER),
+				xGenMeshHeightmap = define_c_func(ray,"+GenMeshHeightmap",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
+				xGenMeshCubicmap = define_c_func(ray,"+GenMeshCubicmap",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
+				
+public function GenMeshPoly(atom sides,atom rad)
+
+ return c_func(xGenMeshPoly,{sides,rad})
+	
+end function
+
+public function GenMeshPlane(atom w,atom len,atom x,atom z)
+
+ return c_func(xGenMeshPlane,{w,len,x,z})
+	
+end function
+
+public function GenMeshCube(atom w,atom h,atom len)
+
+ return c_func(xGenMeshCube,{w,h,len})
+	
+end function
+
+public function GenMeshSphere(atom rad,atom rings,atom slice)
+
+ return c_func(xGenMeshSphere,{rad,rings,slice})
+	
+end function
+
+public function GenMeshHemiSphere(atom rad,atom rings,atom slice)
+
+ return c_func(xGenMeshHemiSphere,{rad,rings,slice})
+	
+end function
+
+public function GenMeshCylinder(atom rad,atom h,atom slice)
+
+ return c_func(xGenMeshCylinder,{rad,h,slice})
+	
+end function
+
+public function GenMeshTorus(atom rad,atom size,atom seg,atom side)
+
+ return c_func(xGenMeshTorus,{rad,size,seg,side})
+	
+end function
+
+public function GenMeshKnot(atom rad,atom size,atom seg,atom side)
+
+ return c_func(xGenMeshKnot,{rad,size,seg,side})
+	
+end function
+
+public function GenMeshHeightmap(atom cmap,atom x,atom y,atom z)
+
+ return c_func(xGenMeshHeightmap,{cmap,x,y,z})
+	
+end function
+
+public function GenMeshCubicmap(atom xmap,atom x,atom y,atom z)
+
+ return c_func(xGenMeshCubicmap,{xmap,x,y,z})
+	
+end function
+
+--Mesh manipulation
+
+public constant xMeshBoundingBox = define_c_func(ray,"+MeshBoundingBox",{C_POINTER},C_POINTER),
+				xMeshTangents = define_c_proc(ray,"+MeshTangents",{C_POINTER}),
+				xMeshBinormals = define_c_proc(ray,"+MeshBinormals",{C_POINTER})
+				
+public function MeshBoundingBox(atom mesh)
+
+ return c_func(xMeshBoundingBox,{mesh})
+	
+end function
+
+public procedure MeshTangents(atom mesh)
+
+ c_proc(xMeshTangents,{mesh})
+	
+end procedure
+
+public procedure MeshBinormals(atom mesh)
+
+ c_proc(xMeshBinormals,{mesh})
+	
+end procedure
+
+--Model drawing
+
+public constant xDrawModel = define_c_proc(ray,"+DrawModel",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawModelEx = define_c_proc(ray,"+DrawModelEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawModelWires = define_c_proc(ray,"+DrawModelWires",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawModelWiresEx = define_c_proc(ray,"+DrawModelWiresEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawBoundingBox = define_c_proc(ray,"+DrawingBoundingBox",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawBillboard = define_c_proc(ray,"+DrawBillboard",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawBillboardRec = define_c_proc(ray,"+DrawBillboardRec",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+				
+public procedure DrawModel(atom mod,atom x,atom y,atom z,atom scale,atom tint)
+
+ c_proc(xDrawModel,{mod,x,y,z,scale,tint})
+	
+end procedure
+
+public procedure DrawModelEx(atom mod,atom x,atom y,atom z,atom x2,atom y2,atom z2,atom rot,atom x3,atom y3,atom z3,atom tint)
+
+ c_proc(xDrawModelEx,{mod,x,y,z,x2,y2,z2,rot,x3,y3,z3,tint})
+	
+end procedure
+
+public procedure DrawModelWires(atom mod,atom x,atom y,atom z,atom scale,atom tint)
+
+ c_proc(xDrawModelWires,{mod,x,y,z,scale,tint})
+	
+end procedure
+
+public procedure DrawModelWiresEx(atom mod,atom x,atom y,atom z,atom x2,atom y2,atom z2,atom rot,atom x3,atom y3,atom z3,atom tint)
+
+ c_proc(xDrawModelWiresEx,{mod,x,y,z,x2,y2,z2,rot,x3,y3,z3,tint})
+	
+end procedure
+
+public procedure DrawBoundingBox(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom col)
+
+ c_proc(xDrawBoundingBox,{x,y,z,x2,y2,z2,col})
+	
+end procedure
+
+public procedure DrawBillboard(atom cam,atom tex,atom x,atom y,atom z,atom size,atom tint)
+
+ c_proc(xDrawBillboard,{cam,tex,x,y,z,size,tint})
+	
+end procedure
+
+public procedure DrawBillboardRec(atom cam,atom tex,atom src,atom x,atom y,atom z,atom size,atom tint)
+
+ c_proc(xDrawBillboardRec,{cam,tex,src,x,y,z,size,tint})
+	
+end procedure
+
+--Collision detection
+
+public constant xCheckCollisionSpheres = define_c_func(ray,"+CheckCollisionSpheres",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionBoxes = define_c_func(ray,"+CheckCollisionBoxes",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionBoxSphere = define_c_func(ray,"+CheckCollisionBoxSphere",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionRaySphere = define_c_func(ray,"+CheckCollisionRaySphere",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_POINTER},C_BOOL),
+				xCheckCollisionRayBox = define_c_func(ray,"+CheckCollisionRayBox",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xGetCollisionRayModel = define_c_func(ray,"+GetCollisionRayModel",{C_POINTER,C_POINTER},C_POINTER),
+				xGetCollisionRayTriangle = define_c_func(ray,"+GetCollisionRayTriangle",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
+				xGetCollisionRayGround = define_c_func(ray,"+GetCollisionRayGround",{C_POINTER,C_FLOAT},C_POINTER),
+				xCheckCollisionRaySphereEx = define_c_func(ray,"+CheckCollisionRaySphereEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
+				
+public function CheckCollisionSpheres(atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2,atom rad2)
+
+ return c_func(xCheckCollisionSpheres,{x,y,z,rad,x2,y2,z2,rad2})
+	
+end function
+
+public function CheckCollisionBoxes(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3,atom x4,atom y4,atom z4)
+
+ return c_func(xCheckCollisionBoxes,{x,y,z,x2,y2,z3,x3,y3,z3,x4,y4,z4})
+	
+end function
+
+public function CheckCollisionBoxSphere(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3,atom rad)
+
+ return c_func(xCheckCollisionBoxSphere,{x,y,z,x2,y2,z2,x3,y3,z3,rad})
+	
+end function
+
+public function CheckCollisionRaySphere(atom ray,atom x,atom y,atom z,atom rad)
+
+ return c_func(xCheckCollisionRaySphere,{ray,x,y,z,rad})
+	
+end function
+
+public function CheckCollisionRaySphereEx(atom ray,atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2)
+
+ return c_func(xCheckCollisionRaySphereEx,{ray,x,y,z,rad,x2,y2,z2})
+	
+end function
+
+public function CheckCollisionRayBox(atom ray,atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xCheckCollisionRayBox,{ray,x,y,z,x2,y2,z2})
+	
+end function
+
+public function GetCollisionRayModel(atom ray,atom mod)
+
+ return c_func(xGetCollisionRayModel,{ray,mod})
+	
+end function
+
+public function GetCollisionRayTriangle(atom ray,atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3)
+
+ return c_func(xGetCollisionRayTriangle,{ray,x,y,z,x2,y2,z2,x3,y3,z3})
+	
+end function
+
+public function GetCollisionRayGround(atom ray,atom height)
+
+ return c_func(xGetCollisionRayGround,{ray,height})
+	
+end function
+
+--End Model Module
+
+--Module Shader (rlgl)
+
+public constant xLoadText = define_c_func(ray,"+LoadText",{C_POINTER},C_POINTER),
+				xLoadShader = define_c_func(ray,"+LoadShader",{C_POINTER,C_POINTER},C_POINTER),
+				xLoadShaderCode = define_c_func(ray,"+LoadShaderCode",{C_POINTER,C_POINTER},C_POINTER),
+				xUnloadShader = define_c_proc(ray,"+UnloadShader",{C_POINTER})
+				
+public function LoadText(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadText,{str})
+	
+end function
+
+public function LoadShader(sequence vsfile,sequence fsfile)
+
+ atom str = allocate_string(vsfile,1)
+ atom str2 = allocate_string(fsfile,1)
+ 
+ return c_func(xLoadShader,{str,str2})
+	
+end function
+
+public function LoadShaderCode(sequence vscode,sequence fscode)
+
+ atom str = allocate_string(vscode,1)
+ atom str2 = allocate_string(fscode,1)
+ 
+ return c_func(xLoadShaderCode,{str,str2})
+	
+end function
+
+public procedure UnloadShader(atom shade)
+
+ c_proc(xUnloadShader,{shade})
+	
+end procedure
+
+public constant xGetShaderDefault = define_c_func(ray,"+GetShaderDefault",{},C_POINTER),
+				xGetTextureDefault = define_c_func(ray,"+GetTextureDefault",{},C_POINTER)
+				
+public function GetShaderDefault()
+
+ return c_func(xGetShaderDefault,{})
+	
+end function
+
+public function GetTextureDefault()
+
+ return c_func(xGetTextureDefault,{})
+	
+end function
+
+--Shader Config
+
+public constant xGetShaderLocation = define_c_func(ray,"+GetShaderLocation",{C_POINTER,C_POINTER},C_INT),
+				xSetShaderValue = define_c_proc(ray,"+SetShaderValue",{C_POINTER,C_INT,C_POINTER,C_INT}),
+				xSetShaderValueV = define_c_proc(ray,"+SetShaderValueV",{C_POINTER,C_INT,C_POINTER,C_INT,C_INT}),
+				xSetShaderValueMatrix = define_c_proc(ray,"+SetShaderValueMatrix",{C_POINTER,C_INT,C_POINTER}),
+				xSetShaderValueTexture = define_c_proc(ray,"+SetShaderValueTexture",{C_POINTER,C_INT,C_POINTER}),
+				xSetMatrixProjection = define_c_proc(ray,"+SetMatrixProjection",{C_POINTER}),
+				xSetMatrixModelview = define_c_proc(ray,"+SetMatrixModelview",{C_POINTER}),
+				xGetMatrixModelview = define_c_func(ray,"+GetMatrixModelview",{},C_POINTER)
+				
+public function GetShaderLocation(atom shade,sequence name)
+
+ atom str = allocate_string(name,1)
+ 
+ return c_func(xGetShaderLocation,{shade,str})
+	
+end function
+
+public procedure SetShaderValue(atom shade,atom loc,object val,atom xtype)
+
+ 
+ c_proc(xSetShaderValue,{shade,loc,val,xtype})
+	
+end procedure
+
+public procedure SetShaderValueV(atom shade,atom loc,object val,atom xtype,atom count)
+
+ c_proc(xSetShaderValueV,{shade,loc,val,xtype,count})
+	
+end procedure
+
+public procedure SetShaderValueMatrix(atom shade,atom loc,atom mat)
+
+ c_proc(xSetShaderValueMatrix,{shade,loc,mat})
+	
+end procedure
+
+public procedure SetShaderValueTexture(atom shade,atom loc,atom tex)
+
+ c_proc(xSetShaderValueTexture,{shade,loc,tex})
+	
+end procedure
+
+public procedure SetMatrixProjection(atom proj)
+
+ c_proc(xSetMatrixProjection,{proj})
+	
+end procedure
+
+public procedure SetMatrixModelview(atom view)
+
+ c_proc(xSetMatrixModelview,{view})
+	
+end procedure
+
+public function GetMatrixModelview()
+
+ return c_func(xGetMatrixModelview,{})
+	
+end function
+
+--shading begin/end
+
+public constant xBeginShaderMode = define_c_proc(ray,"+BeginShaderMode",{C_POINTER}),
+				xEndShaderMode = define_c_proc(ray,"+EndShaderMode",{}),
+				xBeginBlendMode = define_c_proc(ray,"+BeginBlendMode",{C_INT}),
+				xEndBlendMode = define_c_proc(ray,"+EndBlendMode",{}),
+				xBeginScissorMode = define_c_proc(ray,"+BeginScissorMode",{C_INT,C_INT,C_INT,C_INT}),
+				xEndScissorMode = define_c_proc(ray,"+EndScissorMode",{})
+				
+public procedure BeginShaderMode(atom shade)
+
+ c_proc(xBeginShaderMode,{shade})
+	
+end procedure
+
+public procedure EndShaderMode()
+
+ c_proc(xEndShaderMode,{})
+	
+end procedure
+
+public procedure BeginBlendMode(atom mode)
+
+ c_proc(xBeginBlendMode,{mode})
+	
+end procedure
+
+public procedure EndBlendMode()
+
+ c_proc(xEndBlendMode,{})
+	
+end procedure
+
+public procedure BeginScissorMode(atom x,atom y,atom w,atom h)
+
+ c_proc(xBeginScissorMode,{x,y,w,h})
+	
+end procedure
+
+public procedure EndScissorMode()
+
+ c_proc(xEndScissorMode,{})
+	
+end procedure
+
+--VR control
+
+public constant xInitVrSimulator = define_c_proc(ray,"+InitVrSimulator",{}),
+				xCloseVrSimulator = define_c_proc(ray,"+CloseVrSimulator",{}),
+				xUpdateVrTracking = define_c_proc(ray,"+UpdateVrTracking",{C_POINTER}),
+				xSetVrConfiguration = define_c_proc(ray,"+SetVrConfiguration",{C_POINTER,C_POINTER}),
+				xIsVrSimulatorReady = define_c_proc(ray,"+IsVrSimulatorReady",{}),
+				xToggleVrMode = define_c_proc(ray,"+ToggleVrMode",{}),
+				xBeginVrDrawing = define_c_proc(ray,"+BeginVrDrawing",{}),
+				xEndVrDrawing = define_c_proc(ray,"+EndVrDrawing",{})
+				
+public procedure InitVrSimulator()
+
+ c_proc(xInitVrSimulator,{})
+	
+end procedure
+
+public procedure CloseVrSimulator()
+
+ c_proc(xCloseVrSimulator,{})
+	
+end procedure
+
+public procedure UpdateVrTracking(atom cam)
+
+ c_proc(xUpdateVrTracking,{cam})
+	
+end procedure
+
+public procedure SetVrConfiguration(atom info,atom dist)
+
+ c_proc(xSetVrConfiguration,{info,dist})
+	
+end procedure
+
+public procedure IsVrSimulatorReady()
+
+ c_proc(xIsVrSimulatorReady,{})
+	
+end procedure
+
+public procedure ToggleVrMode()
+
+ c_proc(xToggleVrMode,{})
+	
+end procedure
+
+public procedure BeginVrDrawing()
+
+ c_proc(xBeginVrDrawing,{})
+	
+end procedure
+
+public procedure EndVrDrawing()
+
+ c_proc(xEndVrDrawing,{})
+	
+end procedure
+
+--End Shader Module
+
+--Audio Module
+
+public constant xInitAudioDevice = define_c_proc(ray,"+InitAudioDevice",{}),
+				xCloseAudioDevice = define_c_proc(ray,"+CloseAudioDevice",{}),
+				xIsAudioDeviceReady = define_c_func(ray,"+IsAudioDeviceReady",{},C_BOOL),
+				xSetMasterVolume = define_c_proc(ray,"+SetMasterVolume",{C_FLOAT})
+				
+public procedure InitAudioDevice()
+
+ c_proc(xInitAudioDevice,{})
+	
+end procedure
+
+public procedure CloseAudioDevice()
+
+ c_proc(xCloseAudioDevice,{})
+	
+end procedure
+
+public function IsAudioDeviceReady()
+
+ return c_func(xIsAudioDeviceReady,{})
+	
+end function
+
+public procedure SetMasterVolume(atom vol)
+
+ c_proc(xSetMasterVolume,{vol})
+	
+end procedure
+
+--Wave sound load/unload
+
+public constant xLoadWave = define_c_func(ray,"+LoadWave",{C_POINTER},C_POINTER),
+				xLoadWaveEx = define_c_func(ray,"+LoadWaveEx",{C_POINTER,C_INT,C_INT,C_INT,C_INT},C_POINTER),
+				xLoadSound = define_c_func(ray,"+LoadSound",{C_POINTER},C_POINTER),
+				xLoadSoundFromWave = define_c_func(ray,"+LoadSoundFromWave",{C_POINTER},C_POINTER),
+				xUpdateSound = define_c_proc(ray,"+UpdateSound",{C_POINTER,C_POINTER,C_INT}),
+				xUnloadWave = define_c_proc(ray,"+UnloadWave",{C_POINTER}),
+				xUnloadSound = define_c_proc(ray,"+UnloadSound",{C_POINTER}),
+				xExportWave = define_c_proc(ray,"+ExportWave",{C_POINTER,C_POINTER}),
+				xExportWaveAsCode = define_c_proc(ray,"+ExportWaveAsCode",{C_POINTER,C_POINTER})
+				
+public function LoadWave(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadWave,{str})
+	
+end function
+
+public function LoadWaveEx(object data,atom count,atom rate,atom size,atom chan)
+
+ return c_func(xLoadWaveEx,{data,count,rate,size,chan})
+	
+end function
+
+public function LoadSound(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadSound,{str})
+	
+end function
+
+public function LoadSoundFromWave(atom wav)
+
+ return c_func(xLoadSoundFromWave,{wav})
+	
+end function
+
+public procedure UpdateSound(atom snd,object data,atom count)
+
+ c_proc(xUpdateSound,{snd,data,count})
+	
+end procedure
+
+public procedure UnloadWave(atom wav)
+
+ c_proc(xUnloadWave,{wav})
+	
+end procedure
+
+public procedure UnloadSound(atom snd)
+
+ c_proc(xUnloadSound,{snd})
+	
+end procedure
+
+public procedure ExportWave(atom wav,sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ c_proc(xExportWave,{wav,str})
+	
+end procedure
+
+public procedure ExportWaveAsCode(atom wav,sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ c_proc(xExportWaveAsCode,{wav,str})
+	
+end procedure
+
+--Wave sound management
+
+public constant xPlaySound = define_c_proc(ray,"+PlaySound",{C_POINTER}),
+				xPauseSound = define_c_proc(ray,"+PauseSound",{C_POINTER}),
+				xResumeSound = define_c_proc(ray,"+ResumeSound",{C_POINTER}),
+				xStopSound = define_c_proc(ray,"+StopSound",{C_POINTER}),
+				xIsSoundPlaying = define_c_func(ray,"+IsSoundPlaying",{C_POINTER},C_BOOL),
+				xSetSoundVolume = define_c_proc(ray,"+SetSoundVolume",{C_POINTER,C_FLOAT}),
+				xSetSoundPitch = define_c_proc(ray,"+SetSoundPitch",{C_POINTER,C_FLOAT}),
+				xWaveFormat = define_c_proc(ray,"+WaveFormat",{C_POINTER,C_INT,C_INT,C_INT}),
+				xWaveCopy = define_c_func(ray,"+WaveCopy",{C_POINTER},C_POINTER),
+				xWaveCrop = define_c_proc(ray,"+WaveCrop",{C_POINTER,C_INT,C_INT}),
+				xGetWaveData = define_c_func(ray,"+GetWaveData",{C_POINTER},C_POINTER)
+				
+public procedure PlaySound(atom snd)
+
+ c_proc(xPlaySound,{snd})
+	
+end procedure
+
+public procedure PauseSound(atom snd)
+
+ c_proc(xPauseSound,{snd})
+	
+end procedure
+
+public procedure ResumeSound(atom snd)
+
+ c_proc(xResumeSound,{snd})
+	
+end procedure
+
+public procedure StopSound(atom snd)
+
+ c_proc(xStopSound,{snd})
+	
+end procedure
+
+public function IsSoundPlaying(atom snd)
+
+ return c_func(xIsSoundPlaying,{snd})
+	
+end function
+
+public procedure SetSoundVolume(atom snd,atom vol)
+
+ c_proc(xSetSoundVolume,{snd,vol})
+	
+end procedure
+
+public procedure SetSoundPitch(atom snd,atom pit)
+
+ c_proc(xSetSoundPitch,{snd,pit})
+	
+end procedure
+
+public procedure WaveFormat(atom wav,atom rate,atom size,atom chan)
+
+ c_proc(xWaveFormat,{wav,rate,size,chan})
+	
+end procedure
+
+public function WaveCopy(atom wav)
+
+ return c_func(xWaveCopy,{wav})
+	
+end function
+
+public procedure WaveCrop(atom wav,atom samp,atom samp2)
+
+ c_proc(xWaveCrop,{wav,samp,samp2})
+	
+end procedure
+
+public function GetWaveData(atom wav)
+
+ return c_func(xGetWaveData,{wav})
+	
+end function
+
+--Music management
+
+public constant xLoadMusicStream = define_c_func(ray,"+LoadMusicStream",{C_POINTER},C_POINTER),
+				xUnloadMusicStream = define_c_proc(ray,"+UnloadMusicStream",{C_POINTER}),
+				xPlayMusicStream = define_c_proc(ray,"+PlayMusicStream",{C_POINTER}),
+				xUpdateMusicStream = define_c_proc(ray,"+UpdateMusicStream",{C_POINTER}),
+				xStopMusicStream = define_c_proc(ray,"+StopMusicStream",{C_POINTER}),
+				xPauseMusicStream = define_c_proc(ray,"+PauseMusicStream",{C_POINTER}),
+				xResumeMusicStream = define_c_proc(ray,"+ResumeMusicStream",{C_POINTER}),
+				xIsMusicPlaying = define_c_func(ray,"+IsMusicPlaying",{C_POINTER},C_BOOL),
+				xSetMusicVolume = define_c_proc(ray,"+SetMusicVolume",{C_POINTER,C_FLOAT}),
+				xSetMusicPitch = define_c_proc(ray,"+SetMusicPitch",{C_POINTER,C_FLOAT}),
+				xSetMusicLoopCount = define_c_proc(ray,"+SetMusicLoopCOunt",{C_POINTER,C_INT}),
+				xGetMusicTimeLength = define_c_func(ray,"+GetMusicTimeLength",{C_POINTER},C_FLOAT),
+				xGetMusicTimePlayed = define_c_func(ray,"+GetMusicTimePlayed",{C_POINTER},C_FLOAT)
+				
+public function LoadMusicStream(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadMusicStream,{str})
+	
+end function
+
+public procedure UnloadMusicStream(atom mus)
+
+ c_proc(xUnloadMusicStream,{mus})
+	
+end procedure
+
+public procedure PlayMusicStream(atom mus)
+
+ c_proc(xPlayMusicStream,{mus})
+	
+end procedure
+
+public procedure UpdateMusicStream(atom mus)
+
+ c_proc(xUpdateMusicStream,{mus})
+	
+end procedure
+
+public procedure StopMusicStream(atom mus)
+
+ c_proc(xStopMusicStream,{mus})
+	
+end procedure
+
+public procedure PauseMusicStream(atom mus)
+
+ c_proc(xPauseMusicStream,{mus})
+	
+end procedure
+
+public procedure ResumeMusicStream(atom mus)
+
+ c_proc(xResumeMusicStream,{mus})
+	
+end procedure
+
+public function IsMusicPlaying(atom mus)
+
+ return c_func(xIsMusicPlaying,{mus})
+	
+end function
+
+public procedure SetMusicVolume(atom mus,atom vol)
+
+ c_proc(xSetMusicVolume,{mus,vol})
+	
+end procedure
+
+public procedure SetMusicPitch(atom mus,atom pit)
+
+ c_proc(xSetMusicPitch,{mus,pit})
+	
+end procedure
+
+public procedure SetMusicLoopCount(atom mus,atom count)
+
+ c_proc(xSetMusicLoopCount,{mus,count})
+	
+end procedure
+
+public function GetMusicTimeLength(atom mus)
+
+ return c_func(xGetMusicTimeLength,{mus})
+	
+end function
+
+public function GetMusicTimePlayed(atom mus)
+
+ return c_func(xGetMusicTimePlayed,{mus})
+	
+end function
+
+--Audiostream management
+
+public constant xInitAudioStream = define_c_func(ray,"+InitAudioStream",{C_UINT,C_UINT,C_UINT},C_POINTER),
+				xUpdateAudioStream = define_c_proc(ray,"+UpdateAudioStream",{C_POINTER,C_POINTER,C_INT}),
+				xCloseAudioStream = define_c_proc(ray,"+CloseAudioStream",{C_POINTER}),
+				xIsAudioBufferProcessed = define_c_func(ray,"+IsAudioBufferProcessed",{C_POINTER},C_BOOL),
+				xPlayAudioStream = define_c_proc(ray,"+PlayAudioStream",{C_POINTER}),
+				xPauseAudioStream = define_c_proc(ray,"+PauseAudioStream",{C_POINTER}),
+				xResumeAudioStream = define_c_proc(ray,"+ResumeAudioStream",{C_POINTER}),
+				xIsAudioStreamPlaying = define_c_func(ray,"+IsAudioStreamPlaying",{C_POINTER},C_BOOL),
+				xStopAudioStream = define_c_proc(ray,"+StopAudioStream",{C_POINTER}),
+				xSetAudioStreamVolume = define_c_proc(ray,"+SetAudioStreamVolume",{C_POINTER,C_FLOAT}),
+				xSetAudioStreamPitch = define_c_proc(ray,"+SetAudioStreamPitch",{C_POINTER,C_FLOAT})
+				
+public function InitAudioStream(atom samp,atom size,atom chan)
+
+ return c_func(xInitAudioStream,{samp,size,chan})
+	
+end function
+
+public procedure UpdateAudioStream(atom st,object data,atom samp)
+
+ c_proc(xUpdateAudioStream,{st,data,samp})
+	
+end procedure
+
+public procedure CloseAudioStream(atom st)
+ 
+ c_proc(xCloseAudioStream,{st})
+	
+end procedure
+
+public function IsAudioBufferProcessed(atom st)
+
+ return c_func(xIsAudioBufferProcessed,{st})
+	
+end function
+
+public procedure PlayAudioStream(atom st)
+
+ c_proc(xPlayAudioStream,{st})
+	
+end procedure
+
+public procedure PauseAudioStream(atom st)
+ 
+ c_proc(xPauseAudioStream,{st})
+	
+end procedure
+
+public procedure ResumeAudioStream(atom st)
+
+ c_proc(xResumeAudioStream,{st})
+	
+end procedure
+
+public function IsAudioStreamPlaying(atom st)
+
+ return c_func(xIsAudioStreamPlaying,{st})
+	
+end function
+
+public procedure StopAudioStream(atom st)
+
+ c_proc(xStopAudioStream,{st})
+	
+end procedure
+
+public procedure SetAudioStreamVolume(atom st,atom vol)
+
+ c_proc(xSetAudioStreamVolume,{st,vol})
+	
+end procedure
+
+public procedure SetAudioStreamPitch(atom st,atom pit)
+
+ c_proc(xSetAudioStreamPitch,{st,pit})
+	
+end procedure
+­280.42

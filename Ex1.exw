@@ -1,0 +1,23 @@
+--without warning
+
+include std/machine.e
+include Euraylib.ew
+
+atom width = 800, height = 600
+
+InitWindow(width,height,"Basic Win")
+
+	SetTargetFPS(30)
+
+while not WindowShouldClose()  do
+	
+	BeginDrawing()
+	
+	ClearBackground(0)
+	
+	EndDrawing()
+
+end while
+
+CloseWindow()
+­8.23

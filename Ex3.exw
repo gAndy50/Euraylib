@@ -1,0 +1,38 @@
+without warning
+
+include flags.e
+include std/convert.e
+include Euraylib.ew
+
+atom w = 800, h = 600
+
+InitWindow(w,h,"Input Example")
+
+atom my_col = bytes_to_int({0,0,0,0})
+
+atom text_col = bytes_to_int({0,0,255,255})
+
+while not WindowShouldClose() do
+	
+	BeginDrawing()
+	
+	ClearBackground(my_col)
+	
+	DrawText("Press arrow keys!",1,1,30,text_col)
+	
+	if IsKeyDown(KEY_RIGHT) then
+		DrawText("Right Pressed",1,30,30,text_col)
+		elsif IsKeyDown(KEY_LEFT) then
+			DrawText("Left Pressed",1,30,30,text_col)
+		elsif IsKeyDown(KEY_UP) then
+			DrawText("Up Pressed",1,30,30,text_col)
+			elsif IsKeyDown(KEY_DOWN) then
+				DrawText("Down Pressed",1,30,30,text_col)
+	end if
+	
+	EndDrawing()
+
+end while
+
+CloseWindow()
+­21.46

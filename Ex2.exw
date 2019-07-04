@@ -1,0 +1,35 @@
+without warning
+
+include std/machine.e
+include std/convert.e
+include flags.e
+include Euraylib.ew
+
+atom width = 800
+atom height = 450
+
+InitWindow(width,height,"Hello World Text")
+
+SetTargetFPS(60)
+
+--Due to the nature of Euphoria and how Raylib was structured using its color variable
+--You'll need to declare a variable and put inside the desired color value using the r,g,b,a
+--values. Use bytes_to_int to convert. This example shows how to do it. 
+
+atom r = bytes_to_int({255,255,255,255})
+atom g = bytes_to_int({0,255,0,255})
+
+while not WindowShouldClose() do
+
+	BeginDrawing()
+	
+	ClearBackground(r)
+	
+	DrawText("Hello World",10,10,50,g)
+	
+	EndDrawing()
+	
+end while
+
+CloseWindow()
+­18.0

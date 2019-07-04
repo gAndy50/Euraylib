@@ -1,0 +1,66 @@
+without warning
+
+include std/machine.e
+include std/convert.e
+
+include flags.e
+include Euraylib.ew
+
+atom w = 800, h = 450
+
+InitWindow(w,h,"Bouncing Ball")
+
+atom ball_x = GetScreenWidth() / 2
+atom ball_y = GetScreenHeight() / 2
+atom ball_speed_x = 5.0
+atom ball_speed_y = 4.0
+
+atom ball_rad = 20
+
+integer paused = 0
+integer frameCounter = 0
+
+SetTargetFPS(60)
+
+atom b = bytes_to_int({0,0,0,0})
+atom g = bytes_to_int({0,255,0,255})
+atom r = bytes_to_int({255,0,0,255})
+
+while not WindowShouldClose() do
+
+	if IsKeyPressed(KEY_SPACE) and paused = 0 then
+		paused = 1
+		elsif IsKeyPressed(KEY_SPACE) and paused = 1 then
+			paused = 0
+	end if
+	
+	if paused = 0 then
+		ball_x += ball_speed_x
+		ball_y += ball_speed_y
+		
+		if ((ball_x >= (GetScreenWidth() - ball_rad)) or (ball_x <= ball_rad)) then
+			ball_speed_x *= -1.0
+		elsif ((ball_y >= (GetScreenHeight() - ball_rad)) or (ball_y <= ball_rad)) then
+			ball_speed_y *= -1.0
+		end if
+	end if
+	frameCounter += 1
+	
+	BeginDrawing()
+	
+	ClearBackground(b)
+	
+	DrawCircleV(ball_x,ball_y,ball_rad,r)
+	
+	if paused = 1  and frameCounter / 30 then
+		DrawText("PAUSED",1,20,30,g)
+	end if
+	
+	DrawFPS(1,1)
+	
+	EndDrawing()
+	
+end while
+
+CloseWindow()
+­55.37

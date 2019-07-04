@@ -1,0 +1,46 @@
+without warning
+
+include std/machine.e
+include std/convert.e
+
+include flags.e
+include Euraylib.ew
+
+atom w = 800, h = 600
+
+InitWindow(w,h,"Move Ball")
+
+atom ball_x = w / 2
+atom ball_y = h / 2
+
+SetTargetFPS(60)
+
+atom g = bytes_to_int({0,0,0,0})
+atom r = bytes_to_int({255,0,0,255})
+
+while not WindowShouldClose() do
+	
+	if IsKeyDown(KEY_RIGHT) then
+		ball_x += 2.0
+	elsif IsKeyDown(KEY_LEFT) then
+		ball_x -= 2.0
+	elsif IsKeyDown(KEY_UP) then
+		ball_y -= 2.0
+	elsif IsKeyDown(KEY_DOWN) then
+		ball_y += 2.0
+	end if
+	
+	BeginDrawing()
+	
+	ClearBackground(g)
+	
+	DrawText("Use arrow keys to move ball.",1,1,30,r)
+	
+	DrawCircleV(ball_x,ball_y,30,r)
+		
+	EndDrawing()
+
+end while
+
+CloseWindow()
+­31.7
