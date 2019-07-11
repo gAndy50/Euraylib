@@ -502,4 +502,9 @@ public enum type NPatchType
 	NPT_3PATCH_HORIZONTAL
 	
 end type
-­120.12
+
+public constant PI = 3.14159265358979323846
+
+public constant DEG2RAD = PI / 180.0
+public constant RAD2DEG = 180.0 / PI
+­509.36

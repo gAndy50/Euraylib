@@ -9,7 +9,7 @@
 without warning
 
 include std/dll.e
---include std/convert.e
+include std/convert.e
 include std/machine.e
 include std/os.e
 
@@ -30,6 +30,19 @@ ifdef WINDOWS then
 end ifdef
 
 include flags.e
+
+procedure poke_float32(atom ptr, object val)
+
+ if atom(val) then
+ 	val = (val)
+ end if
+ 
+	for i = 1 to length(val) do
+		poke(ptr,atom_to_float32(val[i]))
+		ptr += sizeof(C_FLOAT)
+	end for
+	
+end procedure
 
 --Core Module Functions
 --Window Functions
@@ -3044,4 +3057,684 @@ public procedure SetAudioStreamPitch(atom st,atom pit)
  c_proc(xSetAudioStreamPitch,{st,pit})
 	
 end procedure
-­310.21
+
+--Math Functions
+
+public constant xClamp = define_c_func(ray,"+Clamp",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Clamp(atom val,atom min,atom max)
+
+ return c_func(xClamp,{val,min,max})
+	
+end function
+
+public constant xLerp = define_c_func(ray,"+Lerp",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Lerp(atom start,atom xend,atom amount)
+
+ return c_func(xLerp,{start,xend,amount})
+	
+end function
+
+public constant xVector2Zero = define_c_func(ray,"+Vector2Zero",{},C_FLOAT)
+
+public function Vector2Zero()
+
+ return c_func(xVector2Zero,{})
+	
+end function
+
+public constant xVector2One = define_c_func(ray,"+Vector2One",{},C_FLOAT)
+
+public function Vector2One()
+
+ return c_func(xVector2One,{})
+	
+end function
+
+public constant xVector2Add = define_c_func(ray,"+Vector2Add",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Add(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2Add,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Subtract = define_c_func(ray,"+Vector2Subtract",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Subtract(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2Subtract,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Length = define_c_func(ray,"+Vector2Length",{C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Length(atom x,atom y)
+
+ return c_func(xVector2Length,{x,y})
+	
+end function
+
+public constant xVector2DotProduct = define_c_func(ray,"+Vector2DotProduct",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2DotProduct(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2DotProduct,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Distance = define_c_func(ray,"+Vector2Distance",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Distance(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2Distance,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Angle = define_c_func(ray,"+Vector2Angle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Angle(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2Angle,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Scale = define_c_func(ray,"+Vector2Scale",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Scale(atom x,atom y,atom scale)
+
+ return c_func(xVector2Scale,{x,y,scale})
+	
+end function
+
+public constant xVector2Multiply = define_c_func(ray,"+Vector2Multiply",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Multiply(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2Multiply,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Negate = define_c_func(ray,"+Vector2Negate",{C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Negate(atom x,atom y)
+
+ return c_func(xVector2Negate,{x,y})
+	
+end function
+
+public constant xVector2Divide = define_c_func(ray,"+Vector2Divide",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Divide(atom x,atom y,atom div)
+
+ return c_func(xVector2Divide,{x,y,div})
+	
+end function
+
+public constant xVector2DivideV = define_c_func(ray,"+Vector2DivideV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2DivideV(atom x,atom y,atom x2,atom y2)
+
+ return c_func(xVector2DivideV,{x,y,x2,y2})
+	
+end function
+
+public constant xVector2Normalize = define_c_func(ray,"+Vector2Normalize",{C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Normalize(atom x,atom y)
+
+ return c_func(xVector2Normalize,{x,y})
+	
+end function
+
+public constant xVector2Lerp = define_c_func(ray,"+Vector2Lerp",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector2Lerp(atom x,atom y,atom x2,atom y2,atom amount)
+
+ return c_func(xVector2Lerp,{x,y,x2,y2,amount})
+	
+end function
+
+public constant xVector3Zero = define_c_func(ray,"+Vector3Zero",{},C_FLOAT)
+
+public function Vector3Zero()
+
+ return c_func(xVector3Zero,{})
+	
+end function
+
+public constant xVector3One = define_c_func(ray,"+Vector3One",{},C_FLOAT)
+
+public function Vector3One()
+
+ return c_func(xVector3One,{})
+	
+end function
+
+public constant xVector3Add = define_c_func(ray,"+Vector3Add",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Add(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Add,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Subtract = define_c_func(ray,"+Vector3Subtract",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Subtract(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Subtract,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Multiply = define_c_func(ray,"+Vector3Multiply",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Multiply(atom x,atom y,atom z,atom scalar)
+
+ return c_func(xVector3Multiply,{x,y,z,scalar})
+	
+end function
+
+public constant xVector3MultiplyV = define_c_func(ray,"+Vector3MultiplyV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3MultiplyV(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3MultiplyV,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3CrossProduct = define_c_func(ray,"+Vector3CrossProduct",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3CrossProduct(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3CrossProduct,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Perpendicular = define_c_func(ray,"+Vector3Perpendicular",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Perpendicular(atom x,atom y,atom z)
+
+ return c_func(xVector3Perpendicular,{x,y,z})
+	
+end function
+
+public constant xVector3Length = define_c_func(ray,"+Vector3Length",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Length(atom x,atom y,atom z)
+
+ return c_func(xVector3Length,{x,y,z})
+	
+end function
+
+public constant xVector3DotProduct = define_c_func(ray,"+Vector3DotProduct",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3DotProduct(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3DotProduct,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Distance = define_c_func(ray,"+Vector3Distance",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Distance(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Distance,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Scale = define_c_func(ray,"+Vector3Scale",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Scale(atom x,atom y,atom z,atom scale)
+
+ return c_func(xVector3Scale,{x,y,z,scale})
+	
+end function
+
+public constant xVector3Negate = define_c_func(ray,"+Vector3Negate",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Negate(atom x,atom y,atom z)
+
+ return c_func(xVector3Negate,{x,y,z})
+	
+end function
+
+public constant xVector3Divide = define_c_func(ray,"+Vector3Divide",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Divide(atom x,atom y,atom z,atom div)
+
+ return c_func(xVector3Divide,{x,y,z,div})
+	
+end function
+
+public constant xVector3DivideV = define_c_func(ray,"+Vector3DivideV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3DivideV(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3DivideV,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Normalize = define_c_func(ray,"+Vector3Normalize",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Normalize(atom x,atom y,atom z)
+
+ return c_func(xVector3Normalize,{x,y,z})
+	
+end function
+
+public constant xVector3OrthoNormalize = define_c_proc(ray,"+Vector3OrthoNormalize",{C_POINTER,C_POINTER,C_POINTER,C_POINTER,C_POINTER,C_POINTER})
+
+public procedure Vector3OrthoNormalize(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ c_proc(xVector3OrthoNormalize,{x,y,z,x2,y2,z2})
+	
+end procedure
+
+public constant xVector3Transform = define_c_func(ray,"+Vector3Transform",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT)
+
+public function Vector3Transform(atom x,atom y,atom z,sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xVector3Transform,{x,y,z,p_mat})
+	
+end function
+
+public constant xVector3RotateByQuaternion = define_c_func(ray,"+Vector3RotateByQuaternion",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3RotateByQuaternion(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom w)
+
+ return c_func(xVector3RotateByQuaternion,{x,y,z,x2,y2,z2,w})
+	
+end function
+
+public constant xVector3Lerp = define_c_func(ray,"+Vector3Lerp",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Lerp(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom amount)
+
+ return c_func(xVector3Lerp,{x,y,z,x2,y2,z2,amount})
+	
+end function
+
+public constant xVector3Reflect = define_c_func(ray,"+Vector3Reflect",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Reflect(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Reflect,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Min = define_c_func(ray,"+Vector3Min",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Min(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Min,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Max = define_c_func(ray,"+Vector3Max",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Max(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xVector3Max,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xVector3Barycenter = define_c_func(ray,"+Vector3Barycenter",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3Barycenter(atom px,atom py,atom pz,atom ax,atom ay,atom az,atom bx,atom By,atom bz,atom cx,atom cy,atom cz)
+
+ return c_func(xVector3Barycenter,{px,py,pz,ax,ay,az,bx,By,bz,cx,cy,cz})
+	
+end function
+
+public constant xVector3ToFloatV = define_c_func(ray,"+Vector3ToFloatV",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function Vector3ToFloatV(atom x,atom y,atom z)
+
+ return c_func(xVector3ToFloatV,{x,y,z})
+	
+end function
+
+public constant xMatrixDeterminant = define_c_func(ray,"+MatrixDeterminant",{C_POINTER},C_FLOAT)
+
+public function MatrixDeterminant(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixDeterminant,{p_mat})
+	
+end function
+
+public constant xMatrixTrace = define_c_func(ray,"+MatrixTrace",{C_POINTER},C_FLOAT)
+
+public function MatrixTrace(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixTrace,{p_mat})
+	
+end function
+
+public constant xMatrixTranspose = define_c_func(ray,"+MatrixTranspose",{C_POINTER},C_POINTER)
+
+public function MatrixTranspose(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixTranspose,{p_mat})
+	
+end function
+
+public constant xMatrixInvert = define_c_func(ray,"+MatrixInvert",{C_POINTER},C_POINTER)
+
+public function MatrixInvert(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixInvert,{p_mat})
+	
+end function
+
+public constant xMatrixNormalize = define_c_func(ray,"+MatrixNormalize",{C_POINTER},C_POINTER)
+
+public function MatrixNormalize(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixNormalize,{p_mat})
+	
+end function
+
+public constant xMatrixIdentity = define_c_func(ray,"+MatrixIdentity",{},C_POINTER)
+
+public function MatrixIdentity()
+
+ return c_func(xMatrixIdentity,{})
+	
+end function
+
+public constant xMatrixAdd = define_c_func(ray,"+MatrixAdd",{C_POINTER,C_POINTER},C_POINTER)
+
+public function MatrixAdd(sequence left,sequence right)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(left),1)
+ atom p_mat2 = allocate_data(sizeof(C_FLOAT) * length(right),1)
+ 
+ poke_float32(p_mat,left)
+ poke_float32(p_mat2,right)
+ 
+ return c_func(xMatrixAdd,{p_mat,p_mat2})
+	
+end function
+
+public constant xMatrixSubtract = define_c_func(ray,"+MatrixSubtract",{C_POINTER,C_POINTER},C_POINTER)
+
+public function MatrixSubtract(sequence left,sequence right)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(left),1)
+ atom p_mat2 = allocate_data(sizeof(C_FLOAT) * length(right),1)
+ 
+ poke_float32(p_mat,left)
+ poke_float32(p_mat2,right)
+ 
+ return c_func(xMatrixSubtract,{p_mat,p_mat2})
+	
+end function
+
+public constant xMatrixTranslate = define_c_func(ray,"+MatrixTranslate",{C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
+
+public function MatrixTranslate(atom x,atom y,atom z)
+
+ return c_func(xMatrixTranslate,{x,y,z})
+	
+end function
+
+public constant xMatrixRotate = define_c_func(ray,"+MatrixRotate",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
+
+public function MatrixRotate(atom x,atom y,atom z,atom angle)
+
+ return c_func(xMatrixRotate,{x,y,z,angle})
+	
+end function
+
+public constant xMatrixRotateX = define_c_func(ray,"+MatrixRotateX",{C_FLOAT},C_POINTER)
+
+public function MatrixRotateX(atom angle)
+
+ return c_func(xMatrixRotateX,{angle})
+	
+end function
+
+public constant xMatrixRotateY = define_c_func(ray,"+MatrixRotateY",{C_FLOAT},C_POINTER)
+
+public function MatrixRotateY(atom angle)
+
+ return c_func(xMatrixRotateY,{angle})
+	
+end function
+
+public constant xMatrixRotateZ = define_c_func(ray,"+MatrixRotateZ",{C_FLOAT},C_POINTER)
+
+public function MatrixRotateZ(atom angle)
+
+ return c_func(xMatrixRotateZ,{angle})
+	
+end function
+
+public constant xMatrixScale = define_c_func(ray,"+MatrixScale",{C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
+
+public function MatrixScale(atom x,atom y,atom z)
+
+ return c_func(xMatrixScale,{x,y,z})
+	
+end function
+
+public constant xMatrixMultiply = define_c_func(ray,"+MatrixMultiply",{C_POINTER,C_POINTER},C_POINTER)
+
+public function MatrixMultiply(sequence left,sequence right)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(left),1)
+ atom p_mat2 = allocate_data(sizeof(C_FLOAT) * length(right),1)
+ 
+ poke_float32(p_mat,left)
+ poke_float32(p_mat2,right)
+ 
+ return c_func(xMatrixMultiply,{p_mat,p_mat2})
+	
+end function
+
+public constant xMatrixFrustum = define_c_func(ray,"+MatrixFrustum",{C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE},C_POINTER)
+
+public function MatrixFrustum(atom left,atom right,atom bot,atom top,atom near,atom far)
+
+ return c_func(xMatrixFrustum,{left,right,bot,top,near,far})
+	
+end function
+
+public constant xMatrixPerspective = define_c_func(ray,"+MatrixPerspective",{C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE},C_POINTER)
+
+public function MatrixPerspective(atom fov,atom aspect,atom near,atom far)
+
+ return c_func(xMatrixPerspective,{fov,aspect,near,far})
+	
+end function
+
+public constant xMatrixOrtho = define_c_func(ray,"+MatrixOrtho",{C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE,C_DOUBLE},C_POINTER)
+
+public function MatrixOrtho(atom left,atom right,atom bot,atom top,atom near,atom far)
+
+ return c_func(xMatrixOrtho,{left,right,bot,top,near,far})
+	
+end function
+
+public constant xMatrixLookAt = define_c_func(ray,"+MatrixLookAt",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
+
+public function MatrixLookAt(atom x,atom y,atom z,atom tx,atom ty,atom tz,atom ux,atom uy,atom uz)
+
+ return c_func(xMatrixLookAt,{x,y,z,tx,ty,tz,ux,uy,uz})
+	
+end function
+
+public constant xMatrixToFloatV = define_c_func(ray,"+MatrixToFloatV",{C_POINTER},C_FLOAT)
+
+public function MatrixToFloatV(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xMatrixToFloatV,{p_mat})
+	
+end function
+
+public constant xQuaternionIdentity = define_c_func(ray,"+QuaternionIdentity",{},C_POINTER)
+
+public function QuaternionIdentity()
+
+ return c_func(xQuaternionIdentity,{})
+	
+end function
+
+public constant xQuaternionLength = define_c_func(ray,"+QuaternionLength",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionLength(atom x,atom y,atom z,atom w)
+
+ return c_func(xQuaternionLength,{x,y,z,w})
+	
+end function
+
+public constant xQuaternionNormalize = define_c_func(ray,"+QuaternionNormalize",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionNormalize(atom x,atom y,atom z,atom w)
+
+ return c_func(xQuaternionNormalize,{x,y,z,w})
+	
+end function
+
+public constant xQuaternionInvert = define_c_func(ray,"+QuaternionInvert",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionInvert(atom x,atom y,atom z,atom w)
+
+ return c_func(xQuaternionInvert,{x,y,z,w})
+	
+end function
+
+public constant xQuaternionMultiply = define_c_func(ray,"+QuaternionMultiply",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionMultiply(atom x,atom y,atom z,atom w,atom x2,atom y2,atom z2,atom w2)
+
+ return c_func(xQuaternionMultiply,{x,y,z,w,x2,y2,z2,w2})
+	
+end function
+
+public constant xQuaternionLerp = define_c_func(ray,"+QuaternionLerp",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionLerp(atom x,atom y,atom z,atom w,atom x2,atom y2,atom z2,atom w2,atom amount)
+	
+ return c_func(xQuaternionLerp,{x,y,z,w,x2,y2,z2,w2})
+
+end function
+
+public constant xQuaternionNlerp = define_c_func(ray,"+QuaternionNlerp",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionNlerp(atom x,atom y,atom z,atom w,atom x2,atom y2,atom z2,atom w2,atom amount)
+
+ return c_func(xQuaternionNlerp,{x,y,z,w,x2,y2,z2,w2,amount})
+	
+end function
+
+public constant xQuaternionSlerp = define_c_func(ray,"+QuaternionSlerp",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionSlerp(atom x,atom y,atom z,atom w,atom x2,atom y2,atom z2,atom w2)
+
+ return c_func(xQuaternionSlerp,{x,y,z,w,x2,y2,z2,w2})
+	
+end function
+
+public constant xQuaternionFromVector3ToVector3 = define_c_func(ray,"+QuaternionFromVector3ToVector3",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionFromVector3ToVector3(atom x,atom y,atom z,atom x2,atom y2,atom z2)
+
+ return c_func(xQuaternionFromVector3ToVector3,{x,y,z,x2,y2,z2})
+	
+end function
+
+public constant xQuaternionFromMatrix = define_c_func(ray,"+QuaternionFromMatrix",{C_POINTER},C_FLOAT)
+
+public function QuaternionFromMatrix(sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xQuaternionFromMatrix,{p_mat})
+	
+end function
+
+public constant xQuaternionToMatrix = define_c_func(ray,"+QuaternionToMatrix",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionToMatrix(atom x,atom y,atom z,atom w)
+
+ return c_func(xQuaternionToMatrix,{x,y,z,w})
+	
+end function
+
+public constant xQuaternionFromAxisAngle = define_c_func(ray,"+QuaternionFromAxisAngle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionFromAxisAngle(atom x,atom y,atom z,atom angle)
+
+ return c_func(xQuaternionFromAxisAngle,{x,y,z,angle})
+	
+end function
+
+public constant xQuaternionToAxisAngle = define_c_proc(ray,"+QuaternionToAxisAngle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_POINTER,C_POINTER})
+
+public procedure QuaternionToAxisAngle(atom x,atom y,atom z,atom w,atom x2,atom y2,atom z2,atom angle)
+
+ c_proc(xQuaternionToAxisAngle,{x,y,z,w,x2,y2,z2,angle})
+	
+end procedure
+
+public constant xQuaternionFromEuler = define_c_func(ray,"+QuaternionFromEuler",{C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionFromEuler(atom roll,atom pitch,atom yaw)
+
+ return c_func(xQuaternionFromEuler,{roll,pitch,yaw})
+	
+end function
+
+public constant xQuaternionToEuler = define_c_func(ray,"+QuaternionToEuler",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT)
+
+public function QuaternionToEuler(atom x,atom y,atom z,atom w)
+
+ return c_func(xQuaternionToEuler,{x,y,z,w})
+	
+end function
+
+public constant xQuaternionTransform = define_c_func(ray,"+QuaternionTransform",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT)
+
+public function QuaternionTransform(atom x,atom y,atom z,atom w,sequence mat)
+
+ atom p_mat = allocate_data(sizeof(C_FLOAT) * length(mat),1)
+ 
+ poke_float32(p_mat,mat)
+ 
+ return c_func(xQuaternionTransform,{x,y,z,w,p_mat})
+	
+end function
+­3737.52
