@@ -307,7 +307,7 @@ public procedure BeginMode3D(atom cam)
 	
 end procedure
 
-public procedure Endmode3D()
+public procedure EndMode3D()
 
  c_proc(xEndMode3D,{})
 	
@@ -3044,4 +3044,4 @@ public procedure SetAudioStreamPitch(atom st,atom pit)
  c_proc(xSetAudioStreamPitch,{st,pit})
 	
 end procedure
-­280.42
+­310.21
