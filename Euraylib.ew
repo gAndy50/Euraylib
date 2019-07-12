@@ -285,7 +285,7 @@ public constant xClearBackground = define_c_proc(ray,"+ClearBackground",{C_UINT}
 				xEndDrawing = define_c_proc(ray,"+EndDrawing",{}),
 				xBeginMode2D = define_c_proc(ray,"+BeginMode2D",{C_POINTER}),
 				xEndMode2D = define_c_proc(ray,"+EndMode2D",{}),
-				xBeginMode3D = define_c_proc(ray,"+BeginMode3D",{C_POINTER}),
+				xBeginMode3D = define_c_proc(ray,"+BeginMode3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT}),
 				xEndMode3D = define_c_proc(ray,"+EndMode3D",{}),
 				xBeginTextureMode = define_c_proc(ray,"+BeginTextureMode",{C_POINTER}),
 				xEndTextureMode = define_c_proc(ray,"+EndTextureMode",{})
@@ -314,9 +314,9 @@ public procedure BeginMode2D(atom cam)
 	
 end procedure
 
-public procedure BeginMode3D(atom cam)
+public procedure BeginMode3D(atom px,atom py,atom pz,atom tx,atom ty,atom tz,atom ux,atom uy,atom uz,atom fov,integer mode)
 
- c_proc(xBeginMode3D,{cam})
+ c_proc(xBeginMode3D,{px,py,pz,tx,ty,tz,ux,uy,uz,fov,mode})
 	
 end procedure
 
@@ -3737,4 +3737,4 @@ public function QuaternionTransform(atom x,atom y,atom z,atom w,sequence mat)
  return c_func(xQuaternionTransform,{x,y,z,w,p_mat})
 	
 end function
-­3737.52
+­288.83
