@@ -283,7 +283,7 @@ end procedure
 public constant xClearBackground = define_c_proc(ray,"+ClearBackground",{C_UINT}),
 				xBeginDrawing = define_c_proc(ray,"+BeginDrawing",{}),
 				xEndDrawing = define_c_proc(ray,"+EndDrawing",{}),
-				xBeginMode2D = define_c_proc(ray,"+BeginMode2D",{C_POINTER}),
+				xBeginMode2D = define_c_proc(ray,"+BeginMode2D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT}),
 				xEndMode2D = define_c_proc(ray,"+EndMode2D",{}),
 				xBeginMode3D = define_c_proc(ray,"+BeginMode3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT}),
 				xEndMode3D = define_c_proc(ray,"+EndMode3D",{}),
@@ -308,9 +308,9 @@ public procedure EndDrawing()
 	
 end procedure
 
-public procedure BeginMode2D(atom cam)
+public procedure BeginMode2D(atom ox,atom oy,atom tx,atom ty,atom rot,atom zoom)
 
- c_proc(xBeginMode2D,{cam})
+ c_proc(xBeginMode2D,{ox,oy,tx,ty,rot,zoom})
 	
 end procedure
 
@@ -994,25 +994,27 @@ public constant xDrawPixel = define_c_proc(ray,"+DrawPixel",{C_INT,C_INT,C_UINT}
 				xDrawRingLines = define_c_proc(ray,"+DrawRingLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_INT,C_UINT}),
 				xDrawRectangle = define_c_proc(ray,"+DrawRectangle",{C_INT,C_INT,C_INT,C_INT,C_UINT}),
 				xDrawRectangleV = define_c_proc(ray,"+DrawRectangleV",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawRectangleRec = define_c_proc(ray,"+DrawRectangleRec",{C_POINTER,C_UINT}),
-				xDrawRectanglePro = define_c_proc(ray,"+DrawRectanglePro",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawRectangleRec = define_c_proc(ray,"+DrawRectangleRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawRectanglePro = define_c_proc(ray,"+DrawRectanglePro",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawRectangleGradientV = define_c_proc(ray,"+DrawRectangleGradientV",{C_INT,C_INT,C_INT,C_INT,C_UINT,C_UINT}),
 				xDrawRectangleGradientH = define_c_proc(ray,"+DrawRectangleGradientH",{C_INT,C_INT,C_INT,C_INT,C_UINT,C_UINT}),
-				xDrawRectangleGradientEx = define_c_proc(ray,"+DrawRectangleGradientEx",{C_POINTER,C_UINT,C_UINT,C_UINT,C_UINT}),
+				xDrawRectangleGradientEx = define_c_proc(ray,"+DrawRectangleGradientEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT,C_UINT,C_UINT,C_UINT}),
 				xDrawRectangleLines = define_c_proc(ray,"+DrawRectangleLines",{C_INT,C_INT,C_INT,C_INT,C_UINT}),
-				xDrawRectangleLinesEx = define_c_proc(ray,"+DrawRectangleLinesEx",{C_POINTER,C_INT,C_UINT}),
-				xDrawRectangleRounded = define_c_proc(ray,"+DrawRectangleRounded",{C_POINTER,C_FLOAT,C_INT,C_UINT}),
-				xDrawRectangleRoundedLines = define_c_proc(ray,"+DrawRectangleRoundedLines",{C_POINTER,C_FLOAT,C_INT,C_INT,C_UINT}),
+				xDrawRectangleLinesEx = define_c_proc(ray,"+DrawRectangleLinesEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xDrawRectangleRounded = define_c_proc(ray,"+DrawRectangleRounded",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xDrawRectangleRoundedLines = define_c_proc(ray,"+DrawRectangleRoundedLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_INT,C_UINT}),
 				xDrawTriangle = define_c_proc(ray,"+DrawTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawTriangleLines = define_c_proc(ray,"+DrawTriangleLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawTriangleFan = define_c_proc(ray,"+DrawTriangleFan",{C_POINTER,C_POINTER,C_INT,C_UINT}),
 				xDrawPoly = define_c_proc(ray,"+DrawPoly",{C_FLOAT,C_FLOAT,C_INT,C_FLOAT,C_FLOAT,C_UINT}),
+				
 				xSetShapesTexture = define_c_proc(ray,"+SetShapesTexture",{C_POINTER,C_POINTER}),
-				xCheckCollisionRecs = define_c_func(ray,"+CheckCollisionRecs",{C_POINTER,C_POINTER},C_BOOL),
+				
+				xCheckCollisionRecs = define_c_func(ray,"+CheckCollisionRecs",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionCircles = define_c_func(ray,"+CheckCollisionCircles",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
-				xCheckCollisionCircleRec = define_c_func(ray,"+CheckCollisionCircleRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_BOOL),
-				xGetCollisionRec = define_c_func(ray,"+GetCollisionRec",{C_POINTER,C_POINTER},C_POINTER),
-				xCheckCollisionPointRec = define_c_func(ray,"+CheckCollisionPointRec",{C_FLOAT,C_FLOAT},C_POINTER),
+				xCheckCollisionCircleRec = define_c_func(ray,"+CheckCollisionCircleRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xGetCollisionRec = define_c_func(ray,"+GetCollisionRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT),
+				xCheckCollisionPointRec = define_c_func(ray,"+CheckCollisionPointRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionPointCircle = define_c_func(ray,"+CheckCollisionPointCircle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionPointTrangle = define_c_func(ray,"+CheckCollisionPointTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
 				
@@ -1118,15 +1120,15 @@ public procedure DrawRectangleV(atom x,atom y,atom x2,atom y2,atom col)
 	
 end procedure
 
-public procedure DrawRectangleRec(atom rec,atom col)
+public procedure DrawRectangleRec(atom x,atom y,atom w,atom h,atom col)
 
- c_proc(xDrawRectangleRec,{rec,col})
+ c_proc(xDrawRectangleRec,{x,y,w,h,col})
 	
 end procedure
 
-public procedure DrawRectanglePro(atom rec,atom x,atom y,atom rot,atom col)
+public procedure DrawRectanglePro(atom rx,atom ry,atom rw,atom rh,atom x,atom y,atom rot,atom col)
 
- c_proc(xDrawRectanglePro,{rec,x,y,rot,col})
+ c_proc(xDrawRectanglePro,{rx,ry,rw,rh,x,y,rot,col})
 	
 end procedure
 
@@ -1142,9 +1144,9 @@ public procedure DrawRectangleGradientH(atom x,atom y,atom w,atom h,atom col,ato
 	
 end procedure
 
-public procedure DrawRectangleGradientEx(atom rec,atom col,atom col2,atom col3,atom col4)
+public procedure DrawRectangleGradientEx(atom x,atom y,atom w,atom h,atom col,atom col2,atom col3,atom col4)
 
- c_proc(xDrawRectangleGradientEx,{rec,col,col2,col3,col4})
+ c_proc(xDrawRectangleGradientEx,{x,y,w,h,col,col2,col3,col4})
 	
 end procedure
 
@@ -1154,21 +1156,21 @@ public procedure DrawRectangleLines(atom x,atom y,atom w,atom h,atom col)
 	
 end procedure
 
-public procedure DrawRectangleLinesEx(atom rec,atom thick,atom col)
+public procedure DrawRectangleLinesEx(atom x,atom y,atom w,atom h,atom thick,atom col)
 
- c_proc(xDrawRectangleLinesEx,{rec,thick,col})
+ c_proc(xDrawRectangleLinesEx,{x,y,w,h,thick,col})
 	
 end procedure
 
-public procedure DrawRectangleRounded(atom rec,atom round,atom segs,atom col)
+public procedure DrawRectangleRounded(atom x,atom y,atom w,atom h,atom round,atom segs,atom col)
 
- c_proc(xDrawRectangleRounded,{rec,round,segs,col})
+ c_proc(xDrawRectangleRounded,{x,y,w,h,round,segs,col})
 	
 end procedure
 
-public procedure DrawRectangleRoundedLines(atom rec,atom round,atom segs,atom thick,atom col)
+public procedure DrawRectangleRoundedLines(atom x,atom y,atom w,atom h,atom round,atom segs,atom thick,atom col)
 
- c_proc(xDrawRectangleRoundedLines,{rec,round,segs,thick,col})
+ c_proc(xDrawRectangleRoundedLines,{x,y,w,h,round,segs,thick,col})
 	
 end procedure
 
@@ -1202,9 +1204,9 @@ public procedure SetShapesTexture(atom tex,atom src)
 	
 end procedure
 
-public function CheckCollisionRecs(atom rec,atom rec2)
+public function CheckCollisionRecs(atom x,atom y,atom w,atom h,atom x2,atom y2,atom w2,atom h2)
 
- return c_func(xCheckCollisionRecs,{rec,rec2})
+ return c_func(xCheckCollisionRecs,{x,y,w,h,x2,y2,w2,h2})
 	
 end function
 
@@ -1214,21 +1216,21 @@ public function CheckCollisionCircles(atom x,atom y,atom rad,atom x2,atom y2,ato
 	
 end function
 
-public function CheckCollisionCircleRec(atom x,atom y,atom rad,atom rec)
+public function CheckCollisionCircleRec(atom x,atom y,atom rad,atom x2,atom y2,atom w,atom h)
 
- return c_func(xCheckCollisionCircleRec,{x,y,rad,rec})
+ return c_func(xCheckCollisionCircleRec,{x,y,rad,x2,y2,w,h})
 	
 end function
 
-public function GetCollisionRec(atom rec,atom rec2)
+public function GetCollisionRec(atom x,atom y,atom w,atom h,atom x2,atom y2,atom w2,atom h2)
 
- return c_func(xGetCollisionRec,{rec,rec2})
+ return c_func(xGetCollisionRec,{x,y,w,h,x2,y2,w2,h2})
 	
 end function
 
-public function CheckCollisionPointRec(atom x,atom y,atom rec)
+public function CheckCollisionPointRec(atom x,atom y,atom x2,atom y2,atom w,atom h)
 
- return c_func(xCheckCollisionPointRec,{x,y,rec})
+ return c_func(xCheckCollisionPointRec,{x,y,x2,y2,w,h})
 	
 end function
 
@@ -1389,7 +1391,7 @@ public constant xImageCopy = define_c_func(ray,"+ImageCopy",{C_POINTER},C_POINTE
 				xImageAlphaClear = define_c_proc(ray,"+ImageAlphaClear",{C_POINTER,C_POINTER,C_FLOAT}),
 				xImageAlphaCrop = define_c_proc(ray,"+ImageAlphaCrop",{C_POINTER,C_FLOAT}),
 				xImageAlphaPremultiply = define_c_proc(ray,"+ImageAlphaPremultiply",{C_POINTER}),
-				xImageCrop = define_c_proc(ray,"+ImageCrop",{C_POINTER,C_POINTER}),
+				xImageCrop = define_c_proc(ray,"+ImageCrop",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT}),
 				xImageResize = define_c_proc(ray,"+ImageResize",{C_POINTER,C_INT,C_INT}),
 				xImageResizeNN = define_c_proc(ray,"+ImageResizeNN",{C_POINTER,C_INT,C_INT}),
 				xImageResizeCanvas = define_c_proc(ray,"+ImageResizeCanvas",{C_POINTER,C_INT,C_INT,C_INT,C_INT,C_UINT}),
@@ -1398,9 +1400,9 @@ public constant xImageCopy = define_c_func(ray,"+ImageCopy",{C_POINTER},C_POINTE
 				xImageExtractPalette = define_c_func(ray,"+ImageExtractPalette",{C_POINTER,C_INT,C_POINTER},C_POINTER),
 				xImageText = define_c_func(ray,"+ImageText",{C_POINTER,C_INT,C_UINT},C_POINTER),
 				xImageTextEx = define_c_func(ray,"+ImageTextEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT},C_POINTER),
-				xImageDraw = define_c_proc(ray,"+ImageDraw",{C_POINTER,C_POINTER,C_POINTER,C_POINTER}),
-				xImageDrawRectangle = define_c_proc(ray,"+ImageDrawRectangle",{C_POINTER,C_POINTER,C_UINT}),
-				xImageDrawRectangleLines = define_c_proc(ray,"+ImageDrawRectangleLines",{C_POINTER,C_POINTER,C_INT,C_UINT}),
+				xImageDraw = define_c_proc(ray,"+ImageDraw",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT}),
+				xImageDrawRectangle = define_c_proc(ray,"+ImageDrawRectangle",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xImageDrawRectangleLines = define_c_proc(ray,"+ImageDrawRectangleLines",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
 				xImageDrawText = define_c_proc(ray,"+ImageDrawText",{C_POINTER,C_FLOAT,C_FLOAT,C_POINTER,C_INT,C_UINT}),
 				xImageDrawTextEx = define_c_proc(ray,"+ImageDrawTextEx",{C_POINTER,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
 				xImageFlipVertical = define_c_proc(ray,"+ImageFlipVertical",{C_POINTER}),
@@ -1456,9 +1458,9 @@ public procedure ImageAlphaPremultiply(atom img)
 	
 end procedure
 
-public procedure ImageCrop(atom img,atom crop)
+public procedure ImageCrop(atom img,atom x,atom y,atom w,atom h)
 
- c_proc(xImageCrop,{img,crop})
+ c_proc(xImageCrop,{img,x,y,w,h})
 	
 end procedure
 
@@ -1514,21 +1516,21 @@ public function ImageTextEx(atom font,sequence text,atom size,atom space,atom ti
 	
 end function
 
-public procedure ImageDraw(atom dst,atom src,atom srcrec,atom dstrec)
+public procedure ImageDraw(atom dst,atom src,atom sx,atom sy,atom sw,atom sh,atom dx,atom dy,atom dw,atom dh)
 
- c_proc(xImageDraw,{dst,src,srcrec,dstrec})
+ c_proc(xImageDraw,{dst,src,sx,sy,sw,sh,dx,dy,dw,dh})
 	
 end procedure
 
-public procedure ImageDrawRectangle(atom dst,atom rec,atom col)
+public procedure ImageDrawRectangle(atom dst,atom x,atom y,atom w,atom h,atom col)
 
- c_proc(xImageDrawRectangle,{dst,rec,col})
+ c_proc(xImageDrawRectangle,{dst,x,y,w,h,col})
 	
 end procedure
 
-public procedure ImageDrawRectangleLines(atom dst,atom rec,atom thick,atom col)
+public procedure ImageDrawRectangleLines(atom dst,atom x,atom y,atom w,atom h,atom thick,atom col)
 
- c_proc(xImageDrawRectangleLines,{dst,rec,thick,col})
+ c_proc(xImageDrawRectangleLines,{dst,x,y,w,h,thick,col})
 	
 end procedure
 
@@ -1696,10 +1698,10 @@ end procedure
 public constant xDrawTexture = define_c_proc(ray,"+DrawTexture",{C_POINTER,C_INT,C_INT,C_UINT}),
 				xDrawTextureV = define_c_proc(ray,"+DrawTextureV",{C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawTextureEx = define_c_proc(ray,"+DrawTextureEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawTextureRec = define_c_proc(ray,"+DrawTextureRec",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawTextureQuad = define_c_proc(ray,"+DrawTextureQuad",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_UINT}),
-				xDrawTexturePro = define_c_proc(ray,"+DrawTexturePro",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawTextureNPatch = define_c_proc(ray,"+DrawTextureNPatch",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+				xDrawTextureRec = define_c_proc(ray,"+DrawTextureRec",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureQuad = define_c_proc(ray,"+DrawTextureQuad",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTexturePro = define_c_proc(ray,"+DrawTexturePro",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawTextureNPatch = define_c_proc(ray,"+DrawTextureNPatch",{C_POINTER,C_UINT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
 				
 public procedure DrawTexture(atom tex,atom x,atom y,atom tint)
 
@@ -1719,27 +1721,27 @@ public procedure DrawTextureEx(atom tex,atom x,atom y,atom rot,atom scale,atom t
 	
 end procedure
 
-public procedure DrawTextureRec(atom tex,atom src,atom x,atom y,atom tint)
+public procedure DrawTextureRec(atom tex,atom sx,atom sy,atom sw,atom sh,atom x,atom y,atom tint)
 
- c_proc(xDrawTextureRec,{tex,src,x,y,tint})
+ c_proc(xDrawTextureRec,{tex,sx,sy,sw,sh,x,y,tint})
 	
 end procedure
 
-public procedure DrawTextureQuad(atom tex,atom x,atom y,atom x2,atom y2,atom quad,atom tint)
+public procedure DrawTextureQuad(atom tex,atom x,atom y,atom x2,atom y2,atom qx,atom qy,atom qw,atom qh,atom tint)
 
- c_proc(xDrawTextureQuad,{tex,x,y,x2,y2,quad,tint})
+ c_proc(xDrawTextureQuad,{tex,x,y,x2,y2,qx,qy,qw,qh,tint})
 	
 end procedure
 
-public procedure DrawTexturePro(atom tex,atom src,atom dst,atom x,atom y,atom rot,atom tint)
+public procedure DrawTexturePro(atom tex,atom sx,atom sy,atom sw,atom sh,atom dx,atom dy,atom dw,atom dh,atom x,atom y,atom rot,atom tint)
 
- c_proc(xDrawTexturePro,{tex,src,dst,x,y,rot,tint})
+ c_proc(xDrawTexturePro,{tex,sx,sy,sw,sh,dx,dy,dw,dh,x,y,rot,tint})
 	
 end procedure
 
-public procedure DrawTextureNPatch(atom tex,atom info,atom dest,atom x,atom y,atom rot,atom tint)
+public procedure DrawTextureNPatch(atom tex,atom info,atom dx,atom dy,atom dw,atom dh,atom x,atom y,atom rot,atom tint)
 
- c_proc(xDrawTextureNPatch,{tex,info,dest,x,y,rot,tint})
+ c_proc(xDrawTextureNPatch,{tex,info,dx,dy,dw,dh,x,y,rot,tint})
 	
 end procedure
 
@@ -1808,8 +1810,8 @@ end procedure
 public constant xDrawFPS = define_c_proc(ray,"+DrawFPS",{C_INT,C_INT}),
 				xDrawText = define_c_proc(ray,"+DrawText",{C_POINTER,C_INT,C_INT,C_INT,C_UINT}),
 				xDrawTextEx = define_c_proc(ray,"+DrawTextEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawTextRec = define_c_proc(ray,"+DrawTextRec",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_BOOL,C_UINT}),
-				xDrawTextRecEx = define_c_proc(ray,"+DrawTextRecEx",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_BOOL,C_UINT,C_INT,C_INT,C_UINT,C_UINT})
+				xDrawTextRec = define_c_proc(ray,"+DrawTextRec",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_BOOL,C_UINT}),
+				xDrawTextRecEx = define_c_proc(ray,"+DrawTextRecEx",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_BOOL,C_UINT,C_INT,C_INT,C_UINT,C_UINT})
 				
 public procedure DrawFPS(atom x,atom y)
 
@@ -1833,19 +1835,19 @@ public procedure DrawTextEx(atom font,sequence text,atom x,atom y,atom size,atom
 	
 end procedure
 
-public procedure DrawTextRec(atom font,sequence text,atom rec,atom size,atom space,atom xwrap,atom tint)
+public procedure DrawTextRec(atom font,sequence text,atom x,atom y,atom w,atom h,atom size,atom space,atom xwrap,atom tint)
 
  atom str = allocate_string(text,1)
  
- c_proc(xDrawTextRec,{font,str,rec,size,space,xwrap,tint})
+ c_proc(xDrawTextRec,{font,str,x,y,w,h,size,space,xwrap,tint})
 	
 end procedure
 
-public procedure DrawTextRecEx(atom font,sequence text,atom rec,atom size,atom space,atom xwrap,atom tint,atom start,atom xlength,atom tex,atom back)
+public procedure DrawTextRecEx(atom font,sequence text,atom x,atom y,atom w,atom h,atom size,atom space,atom xwrap,atom tint,atom start,atom xlength,atom tex,atom back)
 
  atom str = allocate_string(text,1)
  
- c_proc(xDrawTextRecEx,{font,str,rec,size,space,xwrap,tint,start,xlength,tex,back})
+ c_proc(xDrawTextRecEx,{font,str,x,y,w,h,size,space,xwrap,tint,start,xlength,tex,back})
 	
 end procedure
 
@@ -2363,7 +2365,7 @@ public constant xDrawModel = define_c_proc(ray,"+DrawModel",{C_POINTER,C_FLOAT,C
 				xDrawModelWiresEx = define_c_proc(ray,"+DrawModelWiresEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawBoundingBox = define_c_proc(ray,"+DrawingBoundingBox",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawBillboard = define_c_proc(ray,"+DrawBillboard",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawBillboardRec = define_c_proc(ray,"+DrawBillboardRec",{C_POINTER,C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+				xDrawBillboardRec = define_c_proc(ray,"+DrawBillboardRec",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
 				
 public procedure DrawModel(atom mod,atom x,atom y,atom z,atom scale,atom tint)
 
@@ -2401,9 +2403,9 @@ public procedure DrawBillboard(atom cam,atom tex,atom x,atom y,atom z,atom size,
 	
 end procedure
 
-public procedure DrawBillboardRec(atom cam,atom tex,atom src,atom x,atom y,atom z,atom size,atom tint)
+public procedure DrawBillboardRec(atom cam,atom tex,atom sx,atom sy,atom sw,atom sh,atom x,atom y,atom z,atom size,atom tint)
 
- c_proc(xDrawBillboardRec,{cam,tex,src,x,y,z,size,tint})
+ c_proc(xDrawBillboardRec,{cam,tex,sx,sy,sw,sh,x,y,z,size,tint})
 	
 end procedure
 
@@ -3737,4 +3739,4 @@ public function QuaternionTransform(atom x,atom y,atom z,atom w,sequence mat)
  return c_func(xQuaternionTransform,{x,y,z,w,p_mat})
 	
 end function
-­288.83
+­313.42
