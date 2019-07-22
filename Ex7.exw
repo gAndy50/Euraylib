@@ -1,0 +1,40 @@
+without warning
+
+include std/machine.e
+include std/convert.e
+
+include Euraylib.ew
+--include raylibshim.e
+
+constant width = 800
+constant height = 450
+
+atom black = bytes_to_int({0,0,0,0})
+atom white = bytes_to_int({255,255,255,255})
+atom yellow = bytes_to_int({255,255,0,255})
+atom blue = bytes_to_int({0,0,255,255})
+
+InitWindow(width,height,"Simple Texture")
+
+
+while not WindowShouldClose() do
+
+	BeginDrawing()
+
+	ClearBackground(blue)
+	
+	DrawText("This is a Texture",1,1,20,yellow)
+	
+	
+    gLoadTexture("raylib_logo.png") 
+	
+    sequence texture_info = {3,256,256,1,0}
+    
+	DrawTexture(texture_info,10, 50,white)
+	
+	EndDrawing()
+	
+end while
+
+CloseWindow()
+­26.20
