@@ -1,0 +1,103 @@
+include std/machine.e
+include std/convert.e
+
+include flags.e
+include Euraylib.ew
+
+atom width = 800
+atom height = 450
+
+InitWindow(width,height,"3D Stuff")
+
+constant Vector3_X = 0,
+		 Vector3_Y = 4,
+		 Vector3_Z = 8,
+		 SIZEOF_VECTOR3 = 12,
+		 $
+		 
+constant Camera3D_Position = 0,
+		 Camera3D_Target = 12,
+		 Camera3D_Up = 24,
+		 Camera3D_Fovy = 36,
+		 Camera3D_Type = 40,
+		 SIZEOF_CAMERA3D = 44,
+		 $
+
+atom cam = allocate_data(SIZEOF_CAMERA3D)
+mem_set(cam,0,SIZEOF_CAMERA3D)
+
+procedure poke_float(atom p,atom f)
+
+  poke(p,atom_to_float32(f))
+	
+end procedure
+
+atom blue = bytes_to_int({0,0,255,255})
+atom white = bytes_to_int({255,255,255,255})
+
+SetTargetFPS(60)
+
+public procedure SetCameraPosition(atom cam,atom x,atom y,atom z)
+
+ poke_float(cam + Camera3D_Position + Vector3_X,x)
+ poke_float(cam + Camera3D_Position + Vector3_Y,y)
+ poke_float(cam + Camera3D_Position + Vector3_Z,z)
+	
+end procedure
+
+public procedure SetCameraTarget(atom cam,atom x,atom y,atom z)
+
+ poke_float(cam + Camera3D_Target + Vector3_X,x)
+ poke_float(cam + Camera3D_Target + Vector3_Y,y)
+ poke_float(cam + Camera3D_Target + Vector3_Z,z)
+	
+end procedure
+
+public procedure SetCameraUp(atom cam,atom x,atom y,atom z)
+
+ poke_float(cam + Camera3D_Up + Vector3_X,x)
+ poke_float(cam + Camera3D_Up + Vector3_Y,y)
+ poke_float(cam + Camera3D_Up + Vector3_Z,z)
+	
+end procedure
+
+public procedure SetCameraFOVY(atom cam,atom fovy)
+
+ poke_float(cam + Camera3D_Fovy,fovy)
+	
+end procedure
+
+public procedure SetCameraType(atom cam,integer xtype)
+
+ poke4(cam + Camera3D_Type,xtype)
+	
+end procedure
+
+SetCameraPosition(cam,0,10.0,10.0)
+SetCameraTarget(cam,0,0,0)
+SetCameraUp(cam,0,1,0)
+SetCameraFOVY(cam,45.0)
+SetCameraType(cam,CAMERA_PERSPECTIVE)
+
+while not WindowShouldClose() do
+
+	BeginDrawing()
+	
+	ClearBackground(white)
+	
+	BeginMode3D(0,10.0,10.0,0,0,0,0,1,0,45.0,CAMERA_PERSPECTIVE)
+	
+	DrawCube(-4.0,0.0,2.0,2.0,5.0,2.0,blue)
+	
+	--DrawGrid(10,1.0)
+	
+	EndMode3D()
+
+	DrawFPS(1,1)
+	
+	EndDrawing()
+	
+end while
+
+CloseWindow()
+­90.40
