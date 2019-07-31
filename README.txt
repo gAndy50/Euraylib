@@ -20,6 +20,8 @@ Ex2 - Text and Color
 Ex3 - Input example
 Ex4 - Input and movement of graphics
 Ex5 - bouncing ball example
+Ex6 - 3D Example
+Ex7 - Loading a Texture
 
 If you like this software, please consider donating. 
 
