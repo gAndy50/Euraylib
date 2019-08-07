@@ -23,7 +23,7 @@ reasons. Some examples are provided to show how the wrapper is used.
 6. Ex6 - 3D Example
 7. Ex7 - Loading a Texture
 
-8. If you like this software, please consider donating. 
+If you like this software, please consider donating. 
 
 # License:
 
@@ -35,3 +35,8 @@ tribute software you make using this software as you please, whether gratis or f
 Thanks for using Euraylib!
 
 Special thanks to the Euphoria community!
+
+# Links:
+
+[Raylib](https://www.raylib.com/)
+[Euphoria](https://openeuphoria.org/index.wc)
