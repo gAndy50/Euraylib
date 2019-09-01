@@ -41,3 +41,5 @@ Special thanks to the Euphoria community!
 [Raylib](https://www.raylib.com/)
 
 [Euphoria](https://openeuphoria.org/index.wc)
+
+[Patreon](https://www.patreon.com/CrazyVikingGamer)
