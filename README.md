@@ -5,7 +5,7 @@
 
 4. (c) Euraylib 2019
 
-5. Contact/Paypal: g_andy <at> live.com
+5. Contact/Paypal: g_andy at live.com
 
 # About:
 
