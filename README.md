@@ -30,7 +30,8 @@ If you like this software, please consider donating.
 This software is provided as-is. There is no warranty for this software. You may not blame the author
 or the Euphoria community for any wrong-doing using this software. You use this software at your own
 risk. You may use this software to write Euphoria programs using the Euraylib wrapper. You may dis-
-tribute software you make using this software as you please, whether gratis or for a fee. 
+tribute software you make using this software as you please, whether gratis or for a fee. You may not claim you wrote the original Euraylib wrapper. While not required an aknowledgement of the original author would be nice.
+
 
 Thanks for using Euraylib!
 
