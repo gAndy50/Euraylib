@@ -44,3 +44,5 @@ Special thanks to the Euphoria community!
 [Euphoria](https://openeuphoria.org/index.wc)
 
 [Patreon](https://www.patreon.com/CrazyVikingGamer)
+
+[Paypal](paypal.me/IcyViking)
