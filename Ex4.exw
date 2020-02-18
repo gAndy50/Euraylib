@@ -37,7 +37,7 @@ while not WindowShouldClose() do
 		end if
 	elsif IsKeyDown(KEY_DOWN) then
 		ball_y += 2.0
-		if ball_y >(h-30) then
+		if ball_y > (h-30) then
 			ball_y = h-30
 		end if
 	end if
@@ -48,6 +48,9 @@ while not WindowShouldClose() do
 	
 	DrawText("Use arrow keys to move ball.",1,1,30,r)
 	
+	DrawText(to_string({"X:",ball_x}),1,30,20,r)
+	DrawText(to_string({"Y:",ball_y}),1,60,20,r)
+	
 	DrawCircleV(ball_x,ball_y,30,r)
 		
 	EndDrawing()
@@ -55,4 +58,4 @@ while not WindowShouldClose() do
 end while
 
 CloseWindow()
-­41.16
+­52.45
