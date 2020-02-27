@@ -2417,12 +2417,12 @@ end procedure
 public constant xCheckCollisionSpheres = define_c_func(ray,"+CheckCollisionSpheres",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionBoxes = define_c_func(ray,"+CheckCollisionBoxes",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionBoxSphere = define_c_func(ray,"+CheckCollisionBoxSphere",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
-				xCheckCollisionRaySphere = define_c_func(ray,"+CheckCollisionRaySphere",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_POINTER},C_BOOL),
-				xCheckCollisionRayBox = define_c_func(ray,"+CheckCollisionRayBox",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
-				xGetCollisionRayModel = define_c_func(ray,"+GetCollisionRayModel",{C_POINTER,C_POINTER},C_POINTER),
-				xGetCollisionRayTriangle = define_c_func(ray,"+GetCollisionRayTriangle",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
-				xGetCollisionRayGround = define_c_func(ray,"+GetCollisionRayGround",{C_POINTER,C_FLOAT},C_POINTER),
-				xCheckCollisionRaySphereEx = define_c_func(ray,"+CheckCollisionRaySphereEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
+				xCheckCollisionRaySphere = define_c_func(ray,"+CheckCollisionRaySphere",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER,C_POINTER},C_BOOL),
+				xCheckCollisionRayBox = define_c_func(ray,"+CheckCollisionRayBox",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xGetCollisionRayModel = define_c_func(ray,"+GetCollisionRayModel",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_POINTER),
+				xGetCollisionRayTriangle = define_c_func(ray,"+GetCollisionRayTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
+				xGetCollisionRayGround = define_c_func(ray,"+GetCollisionRayGround",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER),
+				xCheckCollisionRaySphereEx = define_c_func(ray,"+CheckCollisionRaySphereEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
 				
 public function CheckCollisionSpheres(atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2,atom rad2)
 
@@ -2442,39 +2442,39 @@ public function CheckCollisionBoxSphere(atom x,atom y,atom z,atom x2,atom y2,ato
 	
 end function
 
-public function CheckCollisionRaySphere(atom ray,atom x,atom y,atom z,atom rad)
+public function CheckCollisionRaySphere(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom x,atom y,atom z,atom rad)
 
- return c_func(xCheckCollisionRaySphere,{ray,x,y,z,rad})
+ return c_func(xCheckCollisionRaySphere,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,x,y,z,rad})
 	
 end function
 
-public function CheckCollisionRaySphereEx(atom ray,atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2)
+public function CheckCollisionRaySphereEx(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom x,atom y,atom z,atom rad,atom x2,atom y2,atom z2)
 
- return c_func(xCheckCollisionRaySphereEx,{ray,x,y,z,rad,x2,y2,z2})
+ return c_func(xCheckCollisionRaySphereEx,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,x,y,z,rad,x2,y2,z2})
 	
 end function
 
-public function CheckCollisionRayBox(atom ray,atom x,atom y,atom z,atom x2,atom y2,atom z2)
+public function CheckCollisionRayBox(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom x,atom y,atom z,atom x2,atom y2,atom z2)
 
- return c_func(xCheckCollisionRayBox,{ray,x,y,z,x2,y2,z2})
+ return c_func(xCheckCollisionRayBox,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,x,y,z,x2,y2,z2})
 	
 end function
 
-public function GetCollisionRayModel(atom ray,atom mod)
+public function GetCollisionRayModel(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom mod)
 
- return c_func(xGetCollisionRayModel,{ray,mod})
+ return c_func(xGetCollisionRayModel,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,mod})
 	
 end function
 
-public function GetCollisionRayTriangle(atom ray,atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3)
+public function GetCollisionRayTriangle(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3)
 
- return c_func(xGetCollisionRayTriangle,{ray,x,y,z,x2,y2,z2,x3,y3,z3})
+ return c_func(xGetCollisionRayTriangle,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,x,y,z,x2,y2,z2,x3,y3,z3})
 	
 end function
 
-public function GetCollisionRayGround(atom ray,atom height)
+public function GetCollisionRayGround(atom ray_x,atom ray_y,atom ray_z,atom dir_x,atom dir_y,atom dir_z,atom height)
 
- return c_func(xGetCollisionRayGround,{ray,height})
+ return c_func(xGetCollisionRayGround,{ray_x,ray_y,ray_z,dir_x,dir_y,dir_z,height})
 	
 end function
 
@@ -4240,6 +4240,7 @@ constant
 	shimLoadTexture             = define_c_proc( ray, "+shimLoadTexture", C_STRING & C_POINTER ),
 	shimLoadTextureFromImage    = define_c_proc( ray, "+shimLoadTextureFromImage", C_IMAGE & C_POINTER ),
 	shimGetMouseRay = define_c_proc(ray,"+shimGetMouseRay",C_VECTOR2 & C_CAMERA & C_POINTER),
+	shimGetWorldToScreen = define_c_proc(ray,"+shimGetWorldToScreen", C_VECTOR3 & C_VECTOR2),
 $
 
 public function gLoadTexture( sequence filename )
@@ -4279,4 +4280,4 @@ public function gLoadTextureFromImage( sequence image )
 	
 	return {id,width,height,mipmaps,format}
 end function
-­4242.67
+­2477.74
