@@ -1,9 +1,9 @@
 # Euraylib
 1. Written by Andy P. (Icy_Viking)
-2. Raylib version: 2.5
+2. Raylib version: 3.0
 3. Euphoria Version: 4.1.0 beta 2
 
-4. (c) Euraylib 2019
+4. (c) Euraylib 2020
 
 5. Contact/Paypal: g_andy at live.com
 
