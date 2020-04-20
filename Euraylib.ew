@@ -1,7 +1,7 @@
 ------------------------------------
 --Euraylib                        --
 --Written by Andy P. (Icy_Viking) --
---Raylib version 2.5              --
+--Raylib version 3.0              --
 --Euphoria version 4.1.0 beta 2   --
 --Icy Viking Games                --
 --Euphoria wrapper for Raylib     --
@@ -74,7 +74,8 @@ public constant xInitWindow = define_c_proc(ray,"+InitWindow",{C_INT,C_INT,C_POI
 				xGetMonitorPhysicalHeight = define_c_func(ray,"+GetMonitorPhysicalHEight",{C_INT},C_INT),
 				xGetMonitorName = define_c_func(ray,"+GetMonitorName",{C_INT},C_POINTER),
 				xGetClipboardText = define_c_func(ray,"+GetClipboardText",{},C_POINTER),
-				xSetClipboardText = define_c_proc(ray,"+SetClipboardText",{C_POINTER})
+				xSetClipboardText = define_c_proc(ray,"+SetClipboardText",{C_POINTER}),
+				xGetWindowPosition = define_c_func(ray,"+GetWindowPosition",{},C_FLOAT)
 				
 public procedure InitWindow(atom w,atom h,sequence title)
 
@@ -241,6 +242,12 @@ public procedure SetClipboardText(sequence text)
 	
 end procedure
 
+public function GetWindowPosition()
+
+ return c_func(xGetWindowPosition,{})
+	
+end function
+
 --Cursor Functions
 
 public constant xShowCursor = define_c_proc(ray,"+ShowCursor",{}),
@@ -343,7 +350,12 @@ end procedure
 
 public constant xGetMouseRay = define_c_func(ray,"+GetMouseRay",{C_FLOAT,C_FLOAT,C_POINTER},C_POINTER),
 				xGetWorldToScreen = define_c_func(ray,"+GetWorldToScreen",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT),
-				xGetCameraMatrix = define_c_func(ray,"+GetCameraMatrix",{C_POINTER},C_POINTER)
+				xGetCameraMatrix = define_c_func(ray,"+GetCameraMatrix",{C_POINTER},C_POINTER),
+				xGetCameraMatrix2D = define_c_func(ray,"+GetCameraMatrix2D",{C_POINTER},C_POINTER),
+				--xGetWorldToScreen = define_c_func(ray,"+GetWorldToScreen",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT),
+				xGetWorldToScreenEx = define_c_func(ray,"+GetWorldToScreenEx",{C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_INT,C_INT},C_FLOAT),
+				xGetWorldToScreen2D = define_c_func(ray,"+GetWorldToScreen2D",{C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT),
+				xGetScreenToWorld2D = define_c_func(ray,"+GetScreenToWorld2D",{C_FLOAT,C_FLOAT,C_POINTER},C_FLOAT)
 				
 public function GetMouseRay(atom x,atom y,atom cam)
 
@@ -360,6 +372,36 @@ end function
 public function GetCameraMatrix(atom cam)
 
  return c_func(xGetCameraMatrix,{cam})
+	
+end function
+
+public function GetCameraMatrix2D(atom cam)
+
+ return c_func(xGetCameraMatrix2D,{cam})
+	
+end function
+
+--public function GetWorldToScreen(atom x,atom y,atom z,atom cam)
+
+ --c_proc(xGetWorldToScreen,{x,y,z,cam})
+	
+--end function
+
+public function GetWorldToScreenEx(atom x,atom y,atom z,atom cam,atom w,atom h)
+
+ return c_func(xGetWorldToScreenEx,{x,y,z,cam,w,h})
+ 
+end function
+
+public function GetWorldToScreen2D(atom x,atom y,atom cam)
+
+ return c_func(xGetWorldToScreen2D,{x,y,cam})
+	
+end function
+
+public function GetScreenToWorld2D(atom x,atom y,atom cam)
+
+ return c_func(xGetScreenToWorld2D,{x,y,cam})
 	
 end function
 
@@ -508,7 +550,13 @@ public constant xFileExists = define_c_func(ray,"+FileExists",{C_POINTER},C_BOOL
 				xIsFileDropped = define_c_func(ray,"+IsFileDropped",{},C_BOOL),
 				xGetDroppedFiles = define_c_func(ray,"+GetDroppedFiles",{C_POINTER},C_POINTER),
 				xClearDroppedFiles = define_c_proc(ray,"+ClearDroppedFiles",{}),
-				xGetFileModTime = define_c_func(ray,"+GetFileModTime",{C_POINTER},C_LONG)
+				xGetFileModTime = define_c_func(ray,"+GetFileModTime",{C_POINTER},C_LONG),
+				xDirectoryExists = define_c_func(ray,"+DirectoryExists",{C_POINTER},C_BOOL),
+				xGetPrevDirectoryPath = define_c_func(ray,"+GetPrevDirectoryPath",{C_POINTER},C_POINTER),
+				xLoadFileData = define_c_func(ray,"+LoadFileData",{C_POINTER,C_POINTER},C_POINTER),
+				xSaveFileData = define_c_proc(ray,"+SaveFileData",{C_POINTER,C_POINTER,C_INT}),
+				xLoadFileText = define_c_func(ray,"+LoadFileText",{C_POINTER},C_POINTER),
+				xSaveFileText = define_c_proc(ray,"+SaveFileText",{C_POINTER,C_POINTER})
 				
 public function FileExists(sequence file)
 
@@ -610,6 +658,76 @@ public function GetFileModTime(sequence file)
  atom str = allocate_string(file,1)
  
  return c_func(xGetFileModTime,{str})
+	
+end function
+
+public function DirectoryExists(sequence path)
+
+ atom str = allocate_string(path,1)
+ 
+ return c_func(xDirectoryExists,{str})
+	
+end function
+
+public function GetPrevDirectoryPath(sequence path)
+
+ atom str = allocate_string(path,1)
+ 
+ return c_func(xGetPrevDirectoryPath,{str})
+	
+end function
+
+public function LoadFileData(sequence file,atom bytes)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadFileData,{str,bytes})
+	
+end function
+
+public procedure SaveFileData(sequence file,object data,atom bytes)
+
+ atom str = allocate_string(file,1)
+ 
+ c_proc(xSaveFileData,{str,data,bytes})
+	
+end procedure
+
+public function LoadFileText(sequence file)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadFileText,{str})
+	
+end function
+
+public procedure SaveFileText(sequence file,sequence txt)
+
+ atom str = allocate_string(file,1)
+ atom str2 = allocate_string(txt,1)
+ 
+ c_proc(xSaveFileText,{str,str2})
+	
+end procedure
+
+--
+
+public constant xCompressData = define_c_func(ray,"+CompressData",{C_POINTER,C_INT,C_POINTER},C_POINTER),
+				xDecompressData = define_c_func(ray,"+DecompressData",{C_POINTER,C_INT,C_POINTER},C_POINTER)
+				
+public function CompressData(sequence data,atom len,atom datalen)
+
+ atom str = allocate_string(data,1)
+ 
+ return c_func(xCompressData,{str,len,datalen})
+	
+end function
+
+public function DecompressData(sequence data,atom len,atom lendata)
+
+ atom str = allocate_string(data,1)
+ 
+ return c_func(xDecompressData,{str,len,lendata})
 	
 end function
 
@@ -1017,7 +1135,11 @@ public constant xDrawPixel = define_c_proc(ray,"+DrawPixel",{C_INT,C_INT,C_UINT}
 				xGetCollisionRec = define_c_func(ray,"+GetCollisionRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_FLOAT),
 				xCheckCollisionPointRec = define_c_func(ray,"+CheckCollisionPointRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionPointCircle = define_c_func(ray,"+CheckCollisionPointCircle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
-				xCheckCollisionPointTrangle = define_c_func(ray,"+CheckCollisionPointTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL)
+				xCheckCollisionPointTrangle = define_c_func(ray,"+CheckCollisionPointTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				
+				xDrawTriangleStrip = define_c_proc(ray,"+DrawTriangleStrip",{C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xDrawEllipse = define_c_proc(ray,"+DrawEllipse",{C_INT,C_INT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawEllipseLines = define_c_proc(ray,"+DrawEllipseLines",{C_INT,C_INT,C_FLOAT,C_FLOAT,C_UINT})
 				
 public procedure DrawPixel(atom x,atom y,atom col)
 
@@ -1202,6 +1324,24 @@ end procedure
 public procedure SetShapesTexture(atom tex,atom src)
 
  c_proc(xSetShapesTexture,{tex,src})
+	
+end procedure
+
+public procedure DrawTriangleStrip(atom x,atom y,atom pc,atom col)
+
+ c_proc(xDrawTriangleStrip,{x,y,pc,col})
+	
+end procedure
+
+public procedure DrawEllipse(atom x,atom y,atom radh,atom radv,atom col)
+
+ c_proc(xDrawEllipse,{x,y,radh,radv,col})
+	
+end procedure
+
+public procedure DrawEllipseLines(atom x,atom y,atom radh,atom radv,atom col)
+
+ c_proc(xDrawEllipseLines,{x,y,radh,radv,col})
 	
 end procedure
 
@@ -1417,7 +1557,9 @@ public constant xImageCopy = define_c_func(ray,"+ImageCopy",{C_POINTER},C_POINTE
 				xImageColorGrayscale = define_c_proc(ray,"+ImageColorGrayscale",{C_POINTER}),
 				xImageColorContrast = define_c_proc(ray,"+ImageColorContrast",{C_POINTER,C_FLOAT}),
 				xImageColorBrightness = define_c_proc(ray,"+ImageColorBrightness",{C_POINTER,C_INT}),
-				xImageColorReplace = define_c_proc(ray,"+ImageColorReplace",{C_POINTER,C_UINT,C_UINT})
+				xImageColorReplace = define_c_proc(ray,"+ImageColorReplace",{C_POINTER,C_UINT,C_UINT}),
+				xGetImageAlphaBorder = define_c_func(ray,"+GetImageAlphaBorder",{C_POINTER,C_FLOAT},C_FLOAT),
+				xImageFromImage = define_c_func(ray,"+ImageFromImage",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_POINTER)
 				
 public function ImageCopy(atom img)
 
@@ -1613,6 +1755,18 @@ public procedure ImageColorReplace(atom img,atom col,atom replace)
 	
 end procedure
 
+public function GetImageAlphaBorder(atom img,atom thres)
+
+ return c_func(xGetImageAlphaBorder,{img,thres})
+	
+end function
+
+public function ImageFromImage(atom img,atom x,atom y,atom w,atom h)
+
+ return c_func(xImageFromImage,{img,x,y,w,h})
+	
+end function
+
 --Image Generation
 
 public constant xGenImageColor = define_c_func(ray,"+GenImageColor",{C_INT,C_INT,C_UINT},C_POINTER),
@@ -1745,6 +1899,65 @@ end procedure
 public procedure DrawTextureNPatch(sequence seg,atom info,atom dx,atom dy,atom dw,atom dh,atom x,atom y,atom rot,atom tint)
 
  c_proc(xDrawTextureNPatch,{seg[1],seg[2],seg[3],seg[4],seg[5],info,dx,dy,dw,dh,x,y,rot,tint})
+	
+end procedure
+
+--
+
+public constant xImageClearBackground = define_c_proc(ray,"+ImageClearBackground",{C_POINTER,C_UINT}),
+				xImageDrawPixel = define_c_proc(ray,"+ImageDrawPixel",{C_POINTER,C_INT,C_INT,C_UINT}),
+				xImageDrawCircle = define_c_proc(ray,"+ImageDrawCircle",{C_POINTER,C_INT,C_INT,C_INT,C_UINT}),
+				xImageDrawPixelV = define_c_proc(ray,"+ImageDrawPixelV",{C_POINTER,C_FLOAT,C_FLOAT,C_UINT}),
+				xImageDrawCircleV = define_c_proc(ray,"+ImageDrawCircleV",{C_POINTER,C_FLOAT,C_FLOAT,C_INT,C_UINT}),
+				xImageDrawLineV = define_c_proc(ray,"+ImageDrawLineV",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xImageDrawRectangleV = define_c_proc(ray,"+ImageDrawRectangleV",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xImageDrawRectangleRec = define_c_proc(ray,"+ImageDrawRectangleRec",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+
+public procedure ImageClearBackground(atom img,atom col)
+
+ c_proc(xImageClearBackground,{img,col})
+	
+end procedure
+
+public procedure ImageDrawPixel(atom img,atom x,atom y,atom col)
+
+ c_proc(xImageDrawPixel,{img,x,y,col})
+	
+end procedure
+
+public procedure ImageDrawCircle(atom img,atom x,atom y,atom rad,atom col)
+
+ c_proc(xImageDrawCircle,{img,x,y,rad,col})
+	
+end procedure
+
+public procedure ImageDrawPixelV(atom img,atom x,atom y,atom col)
+
+ c_proc(xImageDrawPixelV,{img,x,y,col})
+	
+end procedure
+
+public procedure ImageDrawCircleV(atom img,atom x,atom y,atom rad,atom col)
+
+ c_proc(xImageDrawCircleV,{img,x,y,rad,col})
+	
+end procedure
+
+public procedure ImageDrawLineV(atom img,atom x,atom y,atom x2,atom y2,atom col)
+
+ c_proc(xImageDrawLineV,{img,x,y,x2,y2,col})
+	
+end procedure
+
+public procedure ImageDrawRectangleV(atom img,atom x,atom y,atom x2,atom y2,atom col)
+
+ c_proc(xImageDrawRectangleV,{img,x,y,x2,y2,col})
+	
+end procedure
+
+public procedure ImageDrawRectangleRec(atom img,atom x,atom y,atom w,atom h,atom col)
+
+ c_proc(xImageDrawRectangleRec,{img,x,y,w,h,col})
 	
 end procedure
 
@@ -2019,6 +2232,44 @@ public function TextToInteger(sequence text)
 	
 end function
 
+public constant xTextCopy = define_c_func(ray,"+TextCopy",{C_POINTER,C_POINTER},C_INT)
+
+public function TextCopy(sequence dst,sequence src)
+
+ atom str = allocate_string(dst,1)
+ atom str2 = allocate_string(src,1)
+ 
+ return c_func(xTextCopy,{str,str2})
+	
+end function
+
+public constant xGetCodepoints = define_c_func(ray,"+GetCodepoints",{C_POINTER,C_POINTER},C_POINTER),
+				xCodepointToUtf8 = define_c_func(ray,"+CodepointToUtf8",{C_INT,C_POINTER},C_POINTER)
+				
+public function GetCodepoints(sequence txt,atom cnt)
+
+ atom str = allocate_string(txt,1)
+ 
+ return c_func(xGetCodepoints,{str,cnt})
+	
+end function
+
+public function CodepointToUtf8(atom pt,atom len)
+
+ return c_func(xCodepointToUtf8,{pt,len})
+	
+end function
+
+--
+
+public constant xDrawTextCodepoint = define_c_proc(ray,"+DrawTextCodepoint",{C_POINTER,C_INT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+
+public procedure DrawTextCodepoint(atom font,atom pt,atom x,atom y,atom scale,atom col)
+
+ c_proc(xDrawTextCodepoint,{font,pt,x,y,scale,col})
+	
+end procedure
+
 --End Module Text
 
 --Model Module Functions
@@ -2133,6 +2384,16 @@ end procedure
 public procedure DrawGizmo(atom x,atom y,atom z)
 
  c_proc(xDrawGizmo,{x,y,z})
+	
+end procedure
+
+--
+
+public constant xDrawPoint3D = define_c_proc(ray,"+DrawPoint3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+
+public procedure DrawPoint3D(atom x,atom y,atom z,atom col)
+
+ c_proc(xDrawPoint3D,{x,y,z,col})
 	
 end procedure
 
@@ -2543,7 +2804,8 @@ public constant xGetShaderLocation = define_c_func(ray,"+GetShaderLocation",{C_P
 				xSetShaderValueTexture = define_c_proc(ray,"+SetShaderValueTexture",{C_POINTER,C_INT,C_POINTER}),
 				xSetMatrixProjection = define_c_proc(ray,"+SetMatrixProjection",{C_POINTER}),
 				xSetMatrixModelview = define_c_proc(ray,"+SetMatrixModelview",{C_POINTER}),
-				xGetMatrixModelview = define_c_func(ray,"+GetMatrixModelview",{},C_POINTER)
+				xGetMatrixModelview = define_c_func(ray,"+GetMatrixModelview",{},C_POINTER),
+				xGetMatrixProjection = define_c_func(ray,"+GetMatrixProjection",{},C_POINTER)
 				
 public function GetShaderLocation(atom shade,sequence name)
 
@@ -2593,6 +2855,12 @@ end procedure
 public function GetMatrixModelview()
 
  return c_func(xGetMatrixModelview,{})
+	
+end function
+
+public function GetMatrixProjection()
+
+ return c_func(xGetMatrixProjection,{})
 	
 end function
 
@@ -4280,4 +4548,4 @@ public function gLoadTextureFromImage( sequence image )
 	
 	return {id,width,height,mipmaps,format}
 end function
-­2477.74
+­2396.33
