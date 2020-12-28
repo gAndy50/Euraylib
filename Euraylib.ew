@@ -1,7 +1,7 @@
 ------------------------------------
 --Euraylib                        --
 --Written by Andy P. (Icy_Viking) --
---Raylib version 3.0              --
+--Raylib version 3.5.0            --
 --Euphoria version 4.1.0 beta 2   --
 --Icy Viking Games                --
 --Euphoria wrapper for Raylib     --
@@ -23,6 +23,12 @@ ifdef WINDOWS then
 	end if
 	elsifdef LINUX or FREEBSD then
 	ray = open_dll("raylib.so")
+	if ray = -1 then
+		puts(1,"Failed to open raylib!\n")
+		abort(0)
+	end if
+	elsifdef OSX then
+	ray = open_dll("raylib.dylib")
 	if ray = -1 then
 		puts(1,"Failed to open raylib!\n")
 		abort(0)
@@ -75,7 +81,12 @@ public constant xInitWindow = define_c_proc(ray,"+InitWindow",{C_INT,C_INT,C_POI
 				xGetMonitorName = define_c_func(ray,"+GetMonitorName",{C_INT},C_POINTER),
 				xGetClipboardText = define_c_func(ray,"+GetClipboardText",{},C_POINTER),
 				xSetClipboardText = define_c_proc(ray,"+SetClipboardText",{C_POINTER}),
-				xGetWindowPosition = define_c_func(ray,"+GetWindowPosition",{},C_FLOAT)
+				xGetWindowPosition = define_c_func(ray,"+GetWindowPosition",{},C_FLOAT),
+				xSetWindowState = define_c_proc(ray,"+SetWindowState",{C_UINT}),
+				xIsWindowFocused = define_c_func(ray,"+IsWindowFocused",{},C_BOOL),
+				xGetWindowScaleDPI = define_c_func(ray,"+GetWindowScaleDPI",{},C_FLOAT),
+				xGetMonitorRefreshRate = define_c_func(ray,"+GetMonitorRefreshRate",{C_INT},C_INT),
+				xClearWindowState = define_c_proc(ray,"+ClearWindowState",{C_UINT})
 				
 public procedure InitWindow(atom w,atom h,sequence title)
 
@@ -248,13 +259,44 @@ public function GetWindowPosition()
 	
 end function
 
+public procedure SetWindowState(atom flags)
+
+ c_proc(xSetWindowState,{flags})
+	
+end procedure
+
+public function IsWindowFocused()
+
+ return c_func(xIsWindowFocused,{})
+	
+end function
+
+public function GetWindowScaleDPI()
+
+ return c_func(xGetWindowScaleDPI,{})
+	
+end function
+
+public function GetMonitorRefreshRate(atom mon)
+
+ return c_func(xGetMonitorRefreshRate,{mon})
+	
+end function
+
+public procedure ClearWindowState(atom flags)
+
+ c_proc(xClearWindowState,{flags})
+	
+end procedure
+
 --Cursor Functions
 
 public constant xShowCursor = define_c_proc(ray,"+ShowCursor",{}),
 				xHideCursor = define_c_proc(ray,"+HideCursor",{}),
 				xIsCursorHidden = define_c_func(ray,"+IsCursorHidden",{},C_BOOL),
 				xEnableCursor = define_c_proc(ray,"+EnableCursor",{}),
-				xDisableCursor = define_c_proc(ray,"+DisableCursor",{})
+				xDisableCursor = define_c_proc(ray,"+DisableCursor",{}),
+				xIsCursorOnScreen = define_c_func(ray,"+IsCursorOnScreen",{},C_BOOL)
 				
 public procedure ShowCursor()
 
@@ -285,6 +327,12 @@ public procedure DisableCursor()
  c_proc(xDisableCursor,{})
 	
 end procedure
+
+public function IsCursorOnScreen()
+
+ return c_func(xIsCursorOnScreen,{})
+	
+end function
 
 --Drawing Functions
 
@@ -443,7 +491,10 @@ public constant xColorToInt = define_c_func(ray,"+ColorToInt",{C_UINT},C_INT),
 				xColorToHSV = define_c_func(ray,"+ColorToHSV",{C_UINT},C_FLOAT),
 				xColorFromHSV = define_c_func(ray,"+ColorFromHSV",{C_FLOAT},C_POINTER),
 				xGetColor = define_c_func(ray,"+GetColor",{C_INT},C_POINTER),
-				xFade = define_c_func(ray,"+Fade",{C_UINT,C_FLOAT},C_POINTER)
+				xFade = define_c_func(ray,"+Fade",{C_UINT,C_FLOAT},C_POINTER),
+				xColorAlphaBlend = define_c_func(ray,"+ColorAlphaBlend",{C_UINT,C_UINT,C_UINT},C_UINT),
+				xGetPixelColor = define_c_func(ray,"+GetPixelColor",{C_POINTER,C_INT},C_UINT),
+				xSetPixelColor = define_c_proc(ray,"+SetPixelColor",{C_POINTER,C_UINT,C_INT})
 				
 public function ColorToInt(atom col)
 
@@ -480,6 +531,24 @@ public function Fade(atom col,atom alpha)
  return c_func(xFade,{col,alpha})
 	
 end function
+
+public function ColorAlphaBlend(atom dst,atom src,atom tint)
+
+ return c_func(xColorAlphaBlend,{dst,src,tint})
+	
+end function
+
+public function GetPixelColor(atom src,atom mat)
+
+ return c_func(xGetPixelColor,{src,mat})
+	
+end function
+
+public procedure SetPixelColor(atom dst,atom col,atom mat)
+
+ c_proc(xSetPixelColor,{dst,col,mat})
+	
+end procedure
 
 --Misc Functions
 
@@ -534,6 +603,23 @@ public function GetRandomValue(atom min,atom max)
  return c_func(xGetRandomValue,{min,max})
 	
 end function
+
+--
+
+public constant xMemAlloc = define_c_func(ray,"+MemAlloc",{C_INT},C_POINTER),
+				xMemFree = define_c_proc(ray,"+MemFree",{C_POINTER})
+				
+public function MemAlloc(atom size)
+
+ return c_func(xMemAlloc,{size})
+	
+end function
+
+public procedure MemFree(atom ptr)
+
+ c_proc(xMemFree,{ptr})
+	
+end procedure
 
 --File Management Functions
 
@@ -889,7 +975,9 @@ public constant xIsMouseButtonPressed = define_c_func(ray,"+IsMouseButtonPressed
 				xSetMousePosition = define_c_proc(ray,"+SetMousePosition",{C_INT,C_INT}),
 				xSetMouseOffset = define_c_proc(ray,"+SetMouseOffset",{C_INT,C_INT}),
 				xSetMouseScale = define_c_proc(ray,"+SetMouseScale",{C_FLOAT,C_FLOAT}),
-				xGetMouseWheelMove = define_c_func(ray,"+GetMouseWheelMove",{},C_INT)
+				xGetMouseWheelMove = define_c_func(ray,"+GetMouseWheelMove",{},C_INT),
+				xGetMouseCursor = define_c_func(ray,"+GetMouseCursor",{},C_INT),
+				xSetMouseCursor = define_c_proc(ray,"+SetMouseCursor",{C_INT})
 				
 public function IsMouseButtonPressed(atom btn)
 
@@ -956,6 +1044,18 @@ public function GetMouseWheelMove()
  return c_func(xGetMouseWheelMove,{})
 	
 end function
+
+public function GetMouseCursor()
+
+ return c_func(xGetMouseCursor,{})
+	
+end function
+
+public procedure SetMouseCursor(atom cur)
+
+ c_proc(xSetMouseCursor,{cur})
+	
+end procedure
 
 --Input Functions (Touch)
 
@@ -1136,6 +1236,7 @@ public constant xDrawPixel = define_c_proc(ray,"+DrawPixel",{C_INT,C_INT,C_UINT}
 				xCheckCollisionPointRec = define_c_func(ray,"+CheckCollisionPointRec",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionPointCircle = define_c_func(ray,"+CheckCollisionPointCircle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
 				xCheckCollisionPointTrangle = define_c_func(ray,"+CheckCollisionPointTriangle",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT},C_BOOL),
+				xCheckCollisionLines = define_c_func(ray,"+CheckCollisionLines",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_POINTER,C_POINTER},C_BOOL),
 				
 				xDrawTriangleStrip = define_c_proc(ray,"+DrawTriangleStrip",{C_FLOAT,C_FLOAT,C_INT,C_UINT}),
 				xDrawEllipse = define_c_proc(ray,"+DrawEllipse",{C_INT,C_INT,C_FLOAT,C_FLOAT,C_UINT}),
@@ -1375,6 +1476,12 @@ public function CheckCollisionPointRec(atom x,atom y,atom x2,atom y2,atom w,atom
 	
 end function
 
+public function CheckCollisionLines(atom x,atom y,atom x2,atom y2,atom x3,atom y3,atom x4,atom y4,atom px,atom py)
+
+ return c_func(xCheckCollisionLines,{x,y,x2,y2,x3,y3,x4,y4,px,py})
+	
+end function
+
 --End Shape Module Functions
 
 --Texture Module Functions
@@ -1524,6 +1631,27 @@ public procedure UpdateTexture(atom tex,object pix)
  c_proc(xUpdateTexture,{tex,pix})
 	
 end procedure
+
+public constant xLoadImageFromMemory = define_c_func(ray,"+LoadImageFromMemory",{C_POINTER,C_POINTER,C_INT},C_POINTER)
+
+public function LoadImageFromMemory(sequence file,sequence dat,atom size)
+
+ atom str = allocate_string(file,1)
+ atom str2 = allocate_string(dat,1)
+ 
+ return c_func(xLoadImageFromMemory,{str,str2,size})
+	
+end function
+
+public constant xLoadImageAnim = define_c_func(ray,"+LoadImageAnim",{C_POINTER,C_POINTER},C_POINTER)
+
+public function LoadImageAnim(sequence file,atom frame)
+
+ atom str = allocate_string(file,1)
+ 
+ return c_func(xLoadImageAnim,{str,frame})
+	
+end function
 
 --Image manipulation 
 
@@ -1902,6 +2030,30 @@ public procedure DrawTextureNPatch(sequence seg,atom info,atom dx,atom dy,atom d
 	
 end procedure
 
+public constant xDrawTextureTiled = define_c_proc(ray,"+DrawTextureTiled",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+
+public procedure DrawTextureTiled(atom tex,atom rect,atom rect2,atom x,atom y,atom rot,atom sca,atom tint)
+
+ c_proc(xDrawTextureTiled,{tex,rect,rect2,x,y,rot,sca,tint})
+	
+end procedure
+
+public constant xUpdateTextureRec = define_c_proc(ray,"+UpdateTextureRec",{C_POINTER,C_POINTER,C_POINTER})
+
+public procedure UpdateTextureRec(atom tex,atom rec,atom pix)
+
+ c_proc(xUpdateTextureRec,{tex,rec,pix})
+	
+end procedure
+
+public constant xUnloadImageColors = define_c_proc(ray,"+UnloadImageColors",{C_POINTER})
+
+public procedure UnloadImageColors(atom col)
+
+ c_proc(xUnloadImageColors,{col})
+	
+end procedure
+
 --
 
 public constant xImageClearBackground = define_c_proc(ray,"+ImageClearBackground",{C_POINTER,C_UINT}),
@@ -1971,7 +2123,9 @@ public constant xGetFontDefault = define_c_func(ray,"+GetFontDefault",{},C_POINT
 				xLoadFontFromImage = define_c_func(ray,"+LoadFontFromImage",{C_POINTER,C_POINTER,C_INT},C_POINTER),
 				xLoadFontData = define_c_func(ray,"+LoadFontData",{C_POINTER,C_INT,C_POINTER,C_INT,C_INT},C_POINTER),
 				xGenImageFontAtlas = define_c_func(ray,"+GenImageFontAtlas",{C_POINTER,C_INT,C_INT,C_INT,C_INT},C_POINTER),
-				xUnloadFont = define_c_proc(ray,"+UnloadFont",{C_POINTER})
+				xUnloadFont = define_c_proc(ray,"+UnloadFont",{C_POINTER}),
+				xLoadFontFromMemory = define_c_func(ray,"+LoadFontFromMemory",{C_POINTER,C_POINTER,C_INT,C_INT,C_POINTER,C_INT},C_POINTER),
+				xUnloadFontData = define_c_proc(ray,"+UnloadFontData",{C_POINTER,C_INT})
 				
 public function GetFontDefault()
 
@@ -2018,6 +2172,21 @@ end function
 public procedure UnloadFont(atom font)
 
  c_proc(xUnloadFont,{font})
+	
+end procedure
+
+public function LoadFontFromMemory(sequence file,sequence dat,atom size,atom fsize,atom fchar,atom count)
+
+ atom str = allocate_string(file,1)
+ atom str2 = allocate_string(dat,1)
+ 
+ return c_func(xLoadFontFromMemory,{str,str2,size,fsize,fchar,count})
+	
+end function
+
+public procedure UnloadFontData(atom font,atom c)
+
+ c_proc(xUnloadFontData,{font,c})
 	
 end procedure
 
@@ -2387,6 +2556,14 @@ public procedure DrawGizmo(atom x,atom y,atom z)
 	
 end procedure
 
+public constant xDrawTriangle3D = define_c_proc(ray,"+DrawTriangle3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
+
+public procedure DrawTriangle3D(atom x,atom y,atom z,atom x2,atom y2,atom z2,atom x3,atom y3,atom z3,atom col)
+
+ c_proc(xDrawTriangle3D,{x,y,z,x2,y2,z2,x3,y3,z3,col})
+	
+end procedure
+
 --
 
 public constant xDrawPoint3D = define_c_proc(ray,"+DrawPoint3D",{C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
@@ -2401,7 +2578,8 @@ end procedure
 
 public constant xLoadModel = define_c_func(ray,"+LoadModel",{C_POINTER},C_POINTER),
 				xLoadModelFromMesh = define_c_func(ray,"+LoadModelFromMesh",{C_POINTER},C_POINTER),
-				xUnloadModel = define_c_proc(ray,"+UnloadModel",{C_POINTER})
+				xUnloadModel = define_c_proc(ray,"+UnloadModel",{C_POINTER}),
+				xUnloadModelKeepMeshes = define_c_proc(ray,"+UnloadModelKeepMeshes",{C_POINTER})
 				
 public function LoadModel(sequence file)
 
@@ -2420,6 +2598,12 @@ end function
 public procedure UnloadModel(atom mod)
 
  c_proc(xUnloadModel,{mod})
+	
+end procedure
+
+public procedure UnloadModelKeepMeshes(atom mod)
+
+ c_proc(xUnloadModelKeepMeshes,{mod})
 	
 end procedure
 
@@ -3011,7 +3195,8 @@ public constant xLoadWave = define_c_func(ray,"+LoadWave",{C_POINTER},C_POINTER)
 				xUnloadWave = define_c_proc(ray,"+UnloadWave",{C_POINTER}),
 				xUnloadSound = define_c_proc(ray,"+UnloadSound",{C_POINTER}),
 				xExportWave = define_c_proc(ray,"+ExportWave",{C_POINTER,C_POINTER}),
-				xExportWaveAsCode = define_c_proc(ray,"+ExportWaveAsCode",{C_POINTER,C_POINTER})
+				xExportWaveAsCode = define_c_proc(ray,"+ExportWaveAsCode",{C_POINTER,C_POINTER}),
+				xLoadWaveFromMemory = define_c_func(ray,"+LoadWaveFromMemory",{C_POINTER,C_POINTER,C_INT},C_POINTER)
 				
 public function LoadWave(sequence file)
 
@@ -3074,6 +3259,15 @@ public procedure ExportWaveAsCode(atom wav,sequence file)
  c_proc(xExportWaveAsCode,{wav,str})
 	
 end procedure
+
+public function LoadWaveFromMemory(sequence file,sequence dat,atom size)
+
+ atom str = allocate_string(file,1)
+ atom str2 = allocate_string(dat,1)
+ 
+ return c_func(xLoadWaveFromMemory,{str,str2,size})
+	
+end function
 
 --Wave sound management
 
@@ -4548,4 +4742,4 @@ public function gLoadTextureFromImage( sequence image )
 	
 	return {id,width,height,mipmaps,format}
 end function
-­2396.33
+­618.15
