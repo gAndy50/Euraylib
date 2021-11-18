@@ -77,7 +77,7 @@ public constant xInitWindow = define_c_proc(ray,"+InitWindow",{C_INT,C_INT,C_POI
 				xGetMonitorWidth = define_c_func(ray,"+GetMonitorWidth",{C_INT},C_INT),
 				xGetMonitorHeight = define_c_func(ray,"+GetMonitorHeight",{C_INT},C_INT),
 				xGetMonitorPhysicalWidth = define_c_func(ray,"+GetMonitorPhysicalWidth",{C_INT},C_INT),
-				xGetMonitorPhysicalHeight = define_c_func(ray,"+GetMonitorPhysicalHEight",{C_INT},C_INT),
+				xGetMonitorPhysicalHeight = define_c_func(ray,"+GetMonitorPhysicalHeight",{C_INT},C_INT),
 				xGetMonitorName = define_c_func(ray,"+GetMonitorName",{C_INT},C_POINTER),
 				xGetClipboardText = define_c_func(ray,"+GetClipboardText",{},C_POINTER),
 				xSetClipboardText = define_c_proc(ray,"+SetClipboardText",{C_POINTER}),
@@ -819,19 +819,19 @@ end function
 
 --Storage Management Functions
 
-public constant xStorageSaveValue = define_c_proc(ray,"+StorageSaveValue",{C_INT,C_INT}),
-				xStorageLoadValue = define_c_func(ray,"+StorageLoadValue",{C_INT},C_INT),
+public constant xGetStorageSaveValue = define_c_proc(ray,"+GetStorageSaveValue",{C_INT,C_INT}),
+				xGetStorageLoadValue = define_c_func(ray,"+GetStorageLoadValue",{C_INT},C_INT),
 				xOpenURL = define_c_proc(ray,"+OpenURL",{C_POINTER})
 				
-public procedure StorageSaveValue(atom pos,atom val)
+public procedure GetStorageSaveValue(atom pos,atom val)
 
- c_proc(xStorageSaveValue,{pos,val})
+ c_proc(xGetStorageSaveValue,{pos,val})
 	
 end procedure
 
-public function StorageLoadValue(atom pos)
+public function GetStorageLoadValue(atom pos)
 
- return c_func(xStorageLoadValue,{pos})
+ return c_func(xGetStorageLoadValue,{pos})
 	
 end function
 
@@ -897,7 +897,7 @@ public constant xIsGamepadAvailable = define_c_func(ray,"+IsGamepadAvailable",{C
 				xIsGamepadButtonDown = define_c_func(ray,"+IsGamepadButtonDown",{C_INT,C_INT},C_BOOL),
 				xIsGamepadButtonReleased = define_c_func(ray,"+IsGamepadButtonReleased",{C_INT,C_INT},C_BOOL),
 				xIsGamepadButtonUp = define_c_func(ray,"+IsGamepadButtonUp",{C_INT,C_INT},C_BOOL),
-				xGetGamepadButtonPressed = define_c_func(ray,"+GameGamepadButtonPressed",{},C_INT),
+				xGetGamepadButtonPressed = define_c_func(ray,"+GetGamepadButtonPressed",{},C_INT),
 				xGetGamepadAxisCount = define_c_func(ray,"+GetGamepadAxisCount",{C_INT},C_INT),
 				xGetGamepadAxisMovement = define_c_func(ray,"+GetGamepadAxisMovement",{C_INT,C_INT},C_FLOAT)
 				
@@ -2811,7 +2811,7 @@ public constant xDrawModel = define_c_proc(ray,"+DrawModel",{C_POINTER,C_FLOAT,C
 				xDrawModelEx = define_c_proc(ray,"+DrawModelEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawModelWires = define_c_proc(ray,"+DrawModelWires",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawModelWiresEx = define_c_proc(ray,"+DrawModelWiresEx",{C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
-				xDrawBoundingBox = define_c_proc(ray,"+DrawingBoundingBox",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
+				xDrawBoundingBox = define_c_proc(ray,"+DrawBoundingBox",{C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawBillboard = define_c_proc(ray,"+DrawBillboard",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT}),
 				xDrawBillboardRec = define_c_proc(ray,"+DrawBillboardRec",{C_POINTER,C_POINTER,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_FLOAT,C_UINT})
 				
@@ -3361,7 +3361,7 @@ public constant xLoadMusicStream = define_c_func(ray,"+LoadMusicStream",{C_POINT
 				xIsMusicPlaying = define_c_func(ray,"+IsMusicPlaying",{C_POINTER},C_BOOL),
 				xSetMusicVolume = define_c_proc(ray,"+SetMusicVolume",{C_POINTER,C_FLOAT}),
 				xSetMusicPitch = define_c_proc(ray,"+SetMusicPitch",{C_POINTER,C_FLOAT}),
-				xSetMusicLoopCount = define_c_proc(ray,"+SetMusicLoopCOunt",{C_POINTER,C_INT}),
+				xSetMusicLoopCount = define_c_proc(ray,"+SetMusicLoopCount",{C_POINTER,C_INT}),
 				xGetMusicTimeLength = define_c_func(ray,"+GetMusicTimeLength",{C_POINTER},C_FLOAT),
 				xGetMusicTimePlayed = define_c_func(ray,"+GetMusicTimePlayed",{C_POINTER},C_FLOAT)
 				
@@ -4698,7 +4698,7 @@ constant C_STRING = C_POINTER
 
 --atom raylibshim = open_dll( "raylib.dll" )
 
-constant
+public constant
 	shimLoadTexture             = define_c_proc( ray, "+shimLoadTexture", C_STRING & C_POINTER ),
 	shimLoadTextureFromImage    = define_c_proc( ray, "+shimLoadTextureFromImage", C_IMAGE & C_POINTER ),
 	shimGetMouseRay = define_c_proc(ray,"+shimGetMouseRay",C_VECTOR2 & C_CAMERA & C_POINTER),
@@ -4742,4 +4742,4 @@ public function gLoadTextureFromImage( sequence image )
 	
 	return {id,width,height,mipmaps,format}
 end function
-­618.15
+­4701.7
