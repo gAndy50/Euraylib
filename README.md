@@ -7,6 +7,8 @@
 
 5. Contact/Paypal: g_andy at live.com
 
+# UPDATE: Use the updated Raylib using FFI here: https://github.com/gAndy50/libffi-euphoria
+
 # About:
 
 This is wrapper of Raylib for the Euphoria programming language. Raylib is a multimedia library that
