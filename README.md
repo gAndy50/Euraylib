@@ -3,7 +3,7 @@
 2. Raylib version: 3.5.0
 3. Euphoria Version: 4.1.0 beta 2
 
-4. (c) Euraylib 2022
+4. (c) Euraylib 2023
 
 5. Contact/Paypal: g_andy at live.com
 
